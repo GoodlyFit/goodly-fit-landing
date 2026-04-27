@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Goodly Fit — Sistema Comercial para Centros Fitness</title>
+<link rel="icon" type="image/png" href="/public/logos/logo-goodly-fit.png?v=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#213DF3;
+  --blue-light:#4d63f5;
+  --blue-glow:rgba(33,61,243,0.25);
+  --dark:#0C1618;
+  --dark-2:#101e20;
+  --dark-3:#142022;
+  --surface:rgba(255,255,255,0.04);
+  --surface-hover:rgba(255,255,255,0.07);
+  --border:rgba(255,255,255,0.09);
+  --border-blue:rgba(33,61,243,0.4);
+  --white:#FCFCFC;
+  --muted:rgba(252,252,252,0.55);
+  --muted-2:rgba(252,252,252,0.35);
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);
+  color:var(--white);
+  font-family:'DM Sans',sans-serif;
+  font-size:16px;
+  line-height:1.7;
+  overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:'Poppins',sans-serif;line-height:1.15;}
+
+/* ANIMATIONS */
+@keyframes float-a{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes float-b{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+@keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes fade-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+@keyframes glow-pulse{0%,100%{box-shadow:0 0 32px var(--blue-glow)}50%{box-shadow:0 0 64px rgba(33,61,243,0.4)}}
+
+.fade-up{animation:fade-up .7s ease both}
+.d1{animation-delay:.1s}.d2{animation-delay:.2s}.d3{animation-delay:.35s}.d4{animation-delay:.5s}
+
+/* NOISE TEXTURE */
+body::before{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.6;
+}
+
+/* LAYOUT */
+.container{max-width:1180px;margin:0 auto;padding:0 24px;}
+section{position:relative;z-index:1;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(12,22,24,0.85);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{max-width:1180px;width:100%;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo-wrap{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.logo-image{height:34px;width:auto;display:block;}
+.nav-links{display:flex;align-items:center;gap:32px;}
+.nav-links a{color:var(--muted);font-size:14px;text-decoration:none;transition:color .2s;font-family:'DM Sans',sans-serif;}
+.nav-links a:hover{color:var(--white);}
+.nav-mobile-links{display:none;}
+.nav-mobile-links a{
+  color:var(--muted);
+  font-size:11px;
+  text-decoration:none;
+  padding:0;
+  font-family:'DM Sans',sans-serif;
+  font-weight:600;
+  white-space:nowrap;
+  letter-spacing:.01em;
+}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue);color:#fff;
+  padding:10px 22px;border-radius:50px;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;
+  text-decoration:none;transition:all .2s;border:none;cursor:pointer;
+}
+.btn-primary:hover{background:var(--blue-light);transform:translateY(-1px);box-shadow:0 8px 24px var(--blue-glow);}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:8px;
+  background:transparent;color:var(--white);
+  padding:10px 22px;border-radius:50px;
+  font-family:'Poppins',sans-serif;font-weight:600;font-size:14px;
+  text-decoration:none;transition:all .2s;
+  border:1px solid var(--border);
+}
+.btn-outline:hover{border-color:rgba(255,255,255,0.3);background:var(--surface);}
+.section-cta{display:flex;justify-content:center;width:100%;margin-top:32px;}
+.section-cta .btn-primary,.demo-cta-wrap .btn-primary{
+  justify-content:center;
+  min-width:min(100%,320px);
+  padding:12px 30px;
+  text-align:center;
+}
+
+/* HERO */
+.hero{
+  padding:160px 24px 100px;
+  position:relative;overflow:hidden;
+}
+.hero-bg-blob{
+  position:absolute;
+  border-radius:50%;filter:blur(120px);pointer-events:none;
+}
+.hero-bg-blob-1{width:600px;height:600px;background:rgba(33,61,243,0.18);top:-100px;left:-200px;}
+.hero-bg-blob-2{width:400px;height:400px;background:rgba(33,61,243,0.1);top:200px;right:-100px;}
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;max-width:1180px;margin:0 auto;}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(33,61,243,0.12);border:1px solid var(--border-blue);
+  padding:6px 16px;border-radius:50px;font-size:13px;color:rgba(147,175,255,1);
+  margin-bottom:28px;font-family:'DM Sans',sans-serif;
+}
+.hero-badge-dot{width:7px;height:7px;border-radius:50%;background:#4d63f5;animation:pulse-dot 2s infinite;}
+h1.hero-title{
+  font-size:clamp(38px,4.5vw,60px);
+  font-weight:800;
+  color:var(--white);
+  letter-spacing:-0.04em;
+  margin-bottom:20px;
+}
+h1.hero-title span{color:var(--blue);}
+.hero-sub{font-size:17px;color:var(--muted);line-height:1.7;margin-bottom:36px;max-width:480px;}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin-bottom:22px;}
+.cta-note{
+  font-size:13px;color:var(--muted-2);
+  margin:0 auto 24px;max-width:520px;text-align:center;
+}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.stat-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:18px 16px;
+}
+.stat-num{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;color:var(--white);}
+.stat-label{font-size:12px;color:var(--muted);margin-top:2px;}
+
+/* HERO VISUAL */
+.hero-visual{position:relative;}
+.hero-card{
+  background:var(--dark-2);
+  border:1px solid var(--border);
+  border-radius:24px;padding:20px;
+  animation:glow-pulse 4s ease infinite;
+}
+.hero-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.hero-card-title{font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;}
+.hero-card-sub{font-size:12px;color:var(--muted);}
+.live-badge{
+  background:rgba(33,61,243,0.15);border:1px solid rgba(33,61,243,0.3);
+  color:#7b9aff;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;
+  font-family:'Poppins',sans-serif;display:flex;align-items:center;gap:5px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:#4d63f5;animation:pulse-dot 1.5s infinite;}
+.crm-mock{background:var(--dark-3);border-radius:16px;padding:16px;}
+.crm-pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;}
+.crm-col{background:rgba(255,255,255,0.03);border-radius:10px;padding:10px;}
+.crm-col-header{font-size:10px;color:var(--muted-2);font-family:'Poppins',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.crm-lead{
+  background:var(--dark-2);border:1px solid var(--border);
+  border-radius:8px;padding:8px;margin-bottom:6px;font-size:11px;color:var(--muted);
+}
+.crm-lead-name{font-size:12px;color:var(--white);font-family:'Poppins',sans-serif;font-weight:600;margin-bottom:2px;}
+.crm-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.crm-metric{background:var(--surface);border-radius:10px;padding:10px;}
+.crm-metric-icon{font-size:14px;margin-bottom:4px;}
+.crm-metric-val{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;color:var(--white);}
+.crm-metric-key{font-size:10px;color:var(--muted);}
+.float-chips{position:absolute;display:flex;flex-direction:column;gap:10px;}
+.float-chips.left{left:-80px;top:60px;}
+.float-chips.right{right:-80px;top:120px;}
+.chip{
+  background:var(--dark-2);border:1px solid var(--border-blue);
+  border-radius:40px;padding:8px 14px;white-space:nowrap;
+  font-size:12px;color:#a0b4ff;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:6px;
+}
+.chip.a{animation:float-a 3.5s ease-in-out infinite;}
+.chip.b{animation:float-b 4.2s ease-in-out infinite .5s;}
+.chip.c{animation:float-a 3.8s ease-in-out infinite 1s;}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);}
+
+/* SECTION EYEBROW */
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-family:'Poppins',sans-serif;font-weight:700;
+  text-transform:uppercase;letter-spacing:.14em;color:#7b9aff;
+  margin-bottom:18px;
+}
+.eyebrow::before{content:'';width:24px;height:2px;background:var(--blue);border-radius:1px;}
+
+/* LOGOS */
+.logos-section{padding:40px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+.logos-label{text-align:center;font-size:12px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:20px;font-family:'Poppins',sans-serif;}
+.marquee-wrap{position:relative;overflow:hidden;}
+.marquee-wrap::before,.marquee-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:100px;z-index:2;pointer-events:none;
+}
+.marquee-wrap::before{left:0;background:linear-gradient(to right,var(--dark),transparent);}
+.marquee-wrap::after{right:0;background:linear-gradient(to left,var(--dark),transparent);}
+.marquee-track{display:flex;gap:20px;width:max-content;animation:marquee 30s linear infinite;}
+.logo-pill{
+  display:flex;align-items:center;justify-content:center;
+  width:72px;height:72px;border-radius:22px;
+  border:1px solid var(--border);background:rgba(255,255,255,0.04);
+  padding:10px;flex-shrink:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.logo-pill img{
+  width:78%;height:78%;
+  object-fit:contain;display:block;
+  border-radius:14px;
+}
+.marquee-track img{
+  width:250px;height: 250px;px;
+  object-fit:contain;display:block;
+  flex-shrink:0;
+}
+
+/* PROBLEM */
+.problem-section{padding:100px 24px;}
+.problem-grid{display:grid;grid-template-columns:1fr;gap:30px;align-items:start;max-width:1080px;margin:0 auto;}
+.problem-copy{max-width:660px;}
+.problem-title{font-size:clamp(32px,3.5vw,48px);font-weight:800;letter-spacing:-0.04em;margin-bottom:20px;}
+.problem-title span{color:var(--blue);}
+.problem-body{font-size:16px;color:var(--muted);line-height:1.8;}
+.problem-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.problem-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:22px;transition:border-color .2s,background .2s;
+}
+.problem-card:hover{border-color:var(--border-blue);background:var(--surface-hover);}
+.problem-card-icon{
+  width:36px;height:36px;border-radius:10px;background:rgba(33,61,243,0.12);
+  display:flex;align-items:center;justify-content:center;margin-bottom:12px;
+}
+.problem-card p{font-size:14px;color:var(--muted);line-height:1.65;}
+.problem-callout{
+  margin-top:28px;padding:18px 22px;
+  background:rgba(33,61,243,0.08);border:1px solid var(--border-blue);
+  border-radius:14px;font-size:15px;color:#a0b4ff;font-style:italic;
+}
+
+/* BREAK */
+.break-section{
+  padding:60px 24px;text-align:center;
+  background:linear-gradient(to bottom,transparent,rgba(33,61,243,0.06),transparent);
+}
+.break-text{
+  font-family:'Poppins',sans-serif;font-size:clamp(22px,3vw,34px);
+  font-weight:700;max-width:800px;margin:0 auto;
+  color:var(--white);line-height:1.35;letter-spacing:-0.03em;
+}
+.break-text em{color:var(--blue);font-style:normal;}
+
+/* SOLUTION */
+.solution-section{padding:100px 24px;}
+.solution-inner{max-width:1180px;margin:0 auto;}
+.solution-header{max-width:680px;margin-bottom:56px;}
+.solution-title{font-size:clamp(32px,3.5vw,50px);font-weight:800;letter-spacing:-0.04em;margin-bottom:16px;}
+.solution-sub{font-size:17px;color:var(--muted);}
+.solution-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.sol-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:22px;padding:28px;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.sol-card::before{
+  content:'';position:absolute;inset:0;border-radius:22px;
+  background:radial-gradient(ellipse at top left,rgba(33,61,243,0.08),transparent 60%);
+  pointer-events:none;
+}
+.sol-card:hover{transform:translateY(-4px);border-color:var(--border-blue);box-shadow:0 16px 40px rgba(0,0,0,0.3);}
+.sol-icon{
+  width:46px;height:46px;border-radius:14px;background:rgba(33,61,243,0.14);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+}
+.sol-card h3{font-size:18px;font-weight:700;margin-bottom:10px;letter-spacing:-0.02em;}
+.sol-card p{font-size:14px;color:var(--muted);line-height:1.7;}
+
+/* VS */
+.vs-section{padding:100px 24px;}
+.vs-inner{max-width:1000px;margin:0 auto;}
+.vs-header{text-align:center;margin-bottom:48px;}
+.vs-title{font-size:clamp(28px,3vw,42px);font-weight:800;letter-spacing:-0.04em;}
+.vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.vs-col{border-radius:22px;padding:30px;border:1px solid var(--border);}
+.vs-col.bad{background:rgba(255,255,255,0.02);}
+.vs-col.good{background:rgba(33,61,243,0.07);border-color:var(--border-blue);}
+.vs-col-title{
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.1em;margin-bottom:22px;
+  display:flex;align-items:center;gap:8px;
+}
+.vs-col.bad .vs-col-title{color:var(--muted);}
+.vs-col.good .vs-col-title{color:#7b9aff;}
+.vs-item{display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;font-size:14px;}
+.vs-item:last-child{margin-bottom:0;}
+.vs-icon{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:2px;}
+.vs-icon.x{background:rgba(255,80,80,0.12);}
+.vs-icon.check{background:rgba(33,61,243,0.15);}
+.vs-item p{color:var(--muted);line-height:1.5;}
+.vs-col.good .vs-item p{color:rgba(252,252,252,0.75);}
+
+/* HOW */
+.how-section{padding:100px 24px;}
+.how-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr;gap:30px;align-items:start;}
+.how-header{max-width:660px;}
+.how-header h2{font-size:clamp(28px,3vw,42px);font-weight:800;letter-spacing:-0.04em;margin-bottom:16px;}
+.how-header p{font-size:16px;color:var(--muted);line-height:1.75;}
+.steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;}
+.step{
+  display:flex;gap:16px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:20px;
+  transition:all .2s;
+}
+.step:last-child{grid-column:1 / -1;}
+.step:hover{border-color:var(--border-blue);background:var(--surface-hover);}
+.step-num{
+  width:38px;height:38px;border-radius:12px;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:800;color:#fff;
+  flex-shrink:0;
+}
+.step p{font-size:14px;color:rgba(252,252,252,0.75);line-height:1.65;padding-top:8px;}
+
+/* RESULTS */
+.results-section{padding:100px 24px;}
+.results-inner{max-width:1180px;margin:0 auto;}
+.results-box{
+  background:linear-gradient(135deg,rgba(33,61,243,0.12),rgba(33,61,243,0.04));
+  border:1px solid var(--border-blue);border-radius:28px;padding:56px 48px;
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;
+}
+.results-left h2{font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-0.04em;margin-bottom:16px;}
+.results-left p{font-size:16px;color:var(--muted);margin-bottom:28px;line-height:1.75;}
+.results-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.result-card{
+  background:rgba(12,22,24,0.6);border:1px solid var(--border);
+  border-radius:18px;padding:22px 16px;text-align:center;
+}
+.result-num{font-family:'Poppins',sans-serif;font-size:30px;font-weight:800;color:var(--white);}
+.result-label{font-size:12px;color:var(--muted);margin-top:4px;}
+
+/* CASES */
+.cases-section{padding:100px 24px;}
+.cases-inner{max-width:1180px;margin:0 auto;}
+.cases-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:44px;gap:24px;flex-wrap:wrap;}
+.cases-header h2{font-size:clamp(28px,3vw,42px);font-weight:800;letter-spacing:-0.04em;}
+.cases-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.case-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:22px;overflow:hidden;
+  transition:all .25s;
+}
+.case-card:hover{transform:translateY(-4px);border-color:var(--border-blue);}
+.case-img-area{
+  height:140px;background:linear-gradient(135deg,rgba(33,61,243,0.25),rgba(33,61,243,0.08));
+  position:relative;display:flex;align-items:center;justify-content:center;
+}
+.case-img-area::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(12,22,24,0.28),transparent 55%);
+  pointer-events:none;
+}
+.case-cover{
+  width:100%;height:100%;
+  object-fit:cover;display:block;
+}
+.case-emoji{font-size:48px;}
+.case-badge{
+  position:absolute;bottom:12px;left:12px;
+  background:var(--blue);color:#fff;
+  font-family:'Poppins',sans-serif;font-size:11px;font-weight:700;
+  padding:4px 12px;border-radius:20px;
+  z-index:1;
+}
+.case-body{padding:22px;}
+.case-name{font-size:11px;color:#7b9aff;font-family:'Poppins',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.case-title{font-family:'Poppins',sans-serif;font-size:16px;font-weight:700;margin-bottom:10px;letter-spacing:-0.02em;}
+.case-desc{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* PLANS */
+.plans-section{padding:100px 24px;}
+.plans-inner{max-width:1180px;margin:0 auto;}
+.plans-header{max-width:600px;margin-bottom:56px;}
+.plans-header h2{font-size:clamp(28px,3vw,42px);font-weight:800;letter-spacing:-0.04em;margin-bottom:14px;}
+.plans-header p{font-size:16px;color:var(--muted);}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:760px;}
+.plan-card{
+  border-radius:22px;padding:30px;border:1px solid var(--border);
+  background:var(--surface);transition:all .25s;
+}
+.plan-card.featured{border-color:var(--blue);background:rgba(33,61,243,0.07);}
+.plan-card:hover{transform:translateY(-3px);}
+.plan-name{font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;margin-bottom:4px;}
+.plan-sub{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.plan-features{list-style:none;display:flex;flex-direction:column;gap:12px;margin-bottom:28px;}
+.plan-features li{display:flex;align-items:center;gap:10px;font-size:14px;color:rgba(252,252,252,0.75);}
+.plan-feat-icon{
+  width:18px;height:18px;border-radius:50%;background:rgba(33,61,243,0.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+
+/* FAQ */
+.faq-section{padding:100px 24px;}
+.faq-inner{max-width:780px;margin:0 auto;}
+.faq-header{text-align:center;margin-bottom:48px;}
+.faq-header h2{font-size:clamp(28px,3vw,42px);font-weight:800;letter-spacing:-0.04em;margin-bottom:14px;}
+.faq-header p{color:var(--muted);}
+.faq-item{
+  border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;margin-bottom:12px;
+}
+.faq-q{
+  width:100%;background:var(--surface);border:none;
+  padding:20px 24px;display:flex;align-items:center;justify-content:space-between;
+  text-align:left;cursor:pointer;color:var(--white);
+  font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;
+  transition:background .2s;gap:16px;
+}
+.faq-q:hover{background:var(--surface-hover);}
+.faq-arrow{
+  width:24px;height:24px;border-radius:50%;background:rgba(33,61,243,0.15);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:transform .3s;
+}
+.faq-item.open .faq-arrow{transform:rotate(180deg);}
+.faq-a{
+  max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease;
+  font-size:14px;color:var(--muted);line-height:1.75;padding:0 24px;background:var(--dark-2);
+}
+.faq-item.open .faq-a{max-height:300px;padding:18px 24px;}
+
+/* DEMO */
+.demo-section{padding:90px 24px 30px;}
+.demo-inner{max-width:1180px;margin:0 auto;}
+.demo-box{
+  display:grid;grid-template-columns:.92fr 1.08fr;gap:26px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(33,61,243,0.05));
+  border:1px solid var(--border);border-radius:28px;padding:32px;
+}
+.demo-copy h2{font-size:clamp(28px,3vw,40px);font-weight:800;letter-spacing:-0.04em;margin-bottom:14px;}
+.demo-copy p{font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:24px;max-width:520px;}
+.demo-pills{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+.demo-pill{
+  padding:8px 14px;border-radius:999px;
+  background:rgba(33,61,243,0.12);border:1px solid var(--border-blue);
+  color:#b7c6ff;font-size:12px;font-weight:600;
+}
+.demo-cta-wrap{display:flex;justify-content:center;margin-top:28px;}
+.demo-cta-wrap{grid-column:1 / -1;}
+.demo-steps{display:grid;gap:14px;}
+.demo-step{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:18px;padding:18px 18px 18px 64px;position:relative;
+}
+.demo-step-num{
+  position:absolute;left:18px;top:18px;
+  width:32px;height:32px;border-radius:10px;background:var(--blue);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;
+}
+.demo-step h3{font-family:'Poppins',sans-serif;font-size:15px;font-weight:700;margin-bottom:6px;}
+.demo-step p{font-size:13px;color:var(--muted);line-height:1.65;}
+
+/* CTA FINAL */
+.final-cta{padding:100px 24px;}
+.final-inner{
+  max-width:900px;margin:0 auto;text-align:center;
+  background:rgba(33,61,243,0.07);border:1px solid var(--border-blue);
+  border-radius:30px;padding:70px 48px;
+  position:relative;overflow:hidden;
+}
+.final-inner::before{
+  content:'';position:absolute;
+  width:500px;height:500px;border-radius:50%;
+  background:rgba(33,61,243,0.12);filter:blur(100px);
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.final-inner h2{font-size:clamp(28px,4vw,50px);font-weight:800;letter-spacing:-0.04em;margin-bottom:16px;position:relative;}
+.final-inner p{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto 36px;position:relative;}
+.final-proof{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
+  margin:-10px 0 28px;position:relative;
+}
+.final-proof span{
+  padding:8px 14px;border-radius:999px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.14);
+  color:rgba(252,252,252,0.8);font-size:12px;font-weight:600;
+}
+.final-ctas{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;position:relative;}
+.btn-large{padding:15px 32px;font-size:16px;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:36px 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.footer-inner{max-width:1180px;margin:0 auto;width:100%;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-copy{font-size:13px;color:var(--muted-2);}
+.footer-links{display:flex;gap:24px;}
+.footer-links a{font-size:13px;color:var(--muted-2);text-decoration:none;transition:color .2s;}
+.footer-links a:hover{color:var(--white);}
+
+/* WA FLOAT */
+.wa-btn{
+  position:fixed;bottom:24px;right:24px;z-index:200;
+  width:58px;height:58px;border-radius:50%;background:#25D366;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(37,211,102,0.35);
+  transition:all .2s;text-decoration:none;
+}
+.wa-btn:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 12px 32px rgba(37,211,102,0.45);}
+
+/* SVG ICONS */
+svg{display:block;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-grid,.results-box{grid-template-columns:1fr;}
+  .demo-box{grid-template-columns:1fr;}
+  .solution-cards,.cases-grid,.plans-grid,.vs-grid,.hero-stats,.crm-pipeline,.problem-cards,.steps{grid-template-columns:1fr 1fr;}
+  .results-grid{grid-template-columns:repeat(3,1fr);}
+  .float-chips{display:none;}
+  .hero-grid>div:first-child{display:flex;flex-direction:column;align-items:center;text-align:center;}
+  .hero-sub,.cta-note{max-width:100%;}
+  .hero-visual{display:none;}
+  .cases-header{flex-direction:column;align-items:flex-start;}
+}
+@media(max-width:600px){
+  .solution-cards,.cases-grid,.plans-grid,.vs-grid,.problem-cards,.steps{grid-template-columns:1fr;}
+  .nav-links,.nav-desktop-cta{display:none;}
+  nav{
+    padding:16px;
+    display:block;
+  }
+  .nav-inner{justify-content:flex-start;}
+  .nav-mobile-links{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding-top:12px;
+    width:100%;
+  }
+  .hero{padding:155px 16px 80px;}
+  .hero-title{font-size:clamp(38px,13vw,54px);line-height:1.05;}
+  .hero-stats,.results-grid{grid-template-columns:1fr;}
+  .final-inner{padding:48px 24px;}
+  .crm-pipeline{grid-template-columns:repeat(2,1fr);}
+  .step:last-child{grid-column:auto;}
+  .result-card{padding:24px 20px;}
+  .result-num{font-size:38px;}
+  .result-label{font-size:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo-wrap">
+      <img src="/public/logos/logo-goodly-fit-2-cropped.png" alt="Goodly Fit" class="logo-image"/>
+    </a>
+    <div class="nav-links">
+      <a href="#sistema">Sistema</a>
+      <a href="#resultados">Resultados</a>
+      <a href="#casos">Casos de éxito</a>
+      <a href="#faq">Preguntas frecuentes</a>
+    </div>
+    <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary nav-desktop-cta">Quiero aplicarlo</a>
+  </div>
+  <div class="nav-mobile-links">
+    <a href="#sistema">Sistema</a>
+    <a href="#resultados">Resultados</a>
+    <a href="#casos">Casos</a>
+    <a href="#faq">Preguntas frecuentes</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-blob hero-bg-blob-1"></div>
+  <div class="hero-bg-blob hero-bg-blob-2"></div>
+  <div class="hero-grid">
+    <div>
+      <div class="hero-badge fade-up">
+        <span class="hero-badge-dot"></span>
+        Para centros fitness que quieren vender más sin depender de sobrecargar a su staff.
+      </div>
+      <h1 class="hero-title fade-up d1">
+        El sistema que convierte clientes 24/7 <span>sin depender de tu equipo.</span>
+      </h1>
+      <p class="hero-sub fade-up d2">
+        Generá entre 10 a 20 consultas por día. Convertílas automáticamente con un sistema que responde en segundos, hace seguimiento y organiza tu proceso comercial sin depender de vos.
+      </p>
+      <div class="hero-ctas fade-up d3">
+        <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary btn-large">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Quiero aplicarlo en mi centro
+        </a>
+       
+      </div>
+      <p class="cta-note fade-up d3">En la demo te mostramos cómo funcionaría el sistema en tu centro fitness, qué parte automatizamos y si hoy tiene sentido implementarlo.</p>
+    </div>
+
+    <div class="hero-visual fade-up d2">
+      <div class="float-chips left">
+        <div class="chip a"><span class="chip-dot"></span> Nuevo cliente: Marcos G.</div>
+        <div class="chip b"><span class="chip-dot"></span> Agendó clase de prueba</div>
+      </div>
+      <div class="hero-card">
+        <div class="hero-card-header">
+          <div>
+            <div class="hero-card-title">Panel comercial</div>
+            <div class="hero-card-sub">Consultas, conversiones y seguimientos</div>
+          </div>
+          <div class="live-badge"><span class="live-dot"></span> En vivo</div>
+        </div>
+        <div class="crm-mock">
+          <div class="crm-pipeline">
+            <div class="crm-col">
+              <div class="crm-col-header">Nuevos</div>
+              <div class="crm-lead"><div class="crm-lead-name">Valentina R.</div>[Wp] Consulta Pilates 10hs</div>
+              <div class="crm-lead"><div class="crm-lead-name">Lucas M.</div>[Ig] Consulta Sala Musculación</div>
+            </div>
+            <div class="crm-col">
+              <div class="crm-col-header">Agendados</div>
+              <div class="crm-lead"><div class="crm-lead-name">Sofía T.</div>Zumba [11hs]</div>
+            </div>
+            <div class="crm-col">
+              <div class="crm-col-header">Asistió</div>
+              <div class="crm-lead"><div class="crm-lead-name">Tomás A.</div>Aero Combat [12hs]</div>
+            </div>
+            <div class="crm-col">
+              <div class="crm-col-header">Compró</div>
+              <div class="crm-lead"><div class="crm-lead-name">Camila F.</div>Plan Trimestral</div>
+            </div>
+          </div>
+          <div class="crm-metrics">
+            <div class="crm-metric">
+              <div class="crm-metric-icon">⚡</div>
+              <div class="crm-metric-val">+53%</div>
+              <div class="crm-metric-key">Nuevas Consultas</div>
+            </div>
+            <div class="crm-metric">
+              <div class="crm-metric-icon">🤖</div>
+              <div class="crm-metric-val">&lt;9s</div>
+              <div class="crm-metric-key">Respuesta IA</div>
+            </div>
+            <div class="crm-metric">
+              <div class="crm-metric-icon">📊</div>
+              <div class="crm-metric-val">CRM</div>
+              <div class="crm-metric-key">Centralizado</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="float-chips right">
+        <div class="chip c"><span class="chip-dot"></span> IA respondió en 4s</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOGOS -->
+<div class="logos-section">
+  <div class="logos-label">Centros fitness que ya están creciendo con este sistema</div>
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+  <img src="LOGOS CLIENTES/LogoAnimal.png" alt="Animal Gym">
+<img src="LOGOS CLIENTES/LogoCamiloYanes.png" alt="Camilo Llanes">
+<img src="LOGOS CLIENTES/LogoCorpore.png" alt="Corpore">
+<img src="LOGOS CLIENTES/LogoCrisBarcala.png" alt="Cris Barcala">
+<img src="LOGOS CLIENTES/LogoHouseFit.png" alt="HouseFit">
+<img src="LOGOS CLIENTES/LogoKinesport.png" alt="Kinesport">
+<img src="LOGOS CLIENTES/LogoMoovOn.png" alt="MoovOn">
+<img src="LOGOS CLIENTES/LogoMove.png" alt="Move">
+<img src="LOGOS CLIENTES/LogoTiempoLibre.png" alt="Tiempo Libre">
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section class="problem-section" id="problema">
+  <div class="problem-grid">
+    <div class="problem-copy">
+      <span class="eyebrow">El problema real</span>
+      <h2 class="problem-title">Tu centro fitness pierde ventas todos los días. <span>Y probablemente ni lo estás viendo.</span></h2>
+      <p class="problem-body">El problema no es que no tengas clientes. El problema es que no tenés un sistema que los capture, los siga y los convierta sin depender de tu staff.</p>
+      <div class="problem-callout">
+        "Mientras tanto, tu competencia está cerrando esos clientes."
+      </div>
+    </div>
+    <div class="problem-cards">
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p>Consultas que llegan y no se responden a tiempo. El interesado desaparece sin comprar.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <p>Recepcionistas que responden tarde, mal o de forma inconsistente. El proceso depende de personas, no de un sistema.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <p>Sin seguimiento real. Nadie vuelve a contactar a quienes mostraron interés pero no agendaron.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-card-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        </div>
+        <p>Cero visibilidad del proceso comercial. No sabés cuántas ventas se pierden cada semana.</p>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero dejar de perder consultas</a>
+    </div>
+  </div>
+</section>
+
+<!-- BREAK -->
+<div class="break-section">
+  <p class="break-text">No somos community managers. No somos un chatbot. <em>Somos un sistema comercial para que tu centro escale.</em></p>
+</div>
+
+<!-- SOLUTION -->
+<section class="solution-section" id="sistema">
+  <div class="solution-inner">
+    <div class="solution-header">
+      <span class="eyebrow">La solución</span>
+      <h2 class="solution-title">Un sistema comercial que convierte </em>consultas</em> en clientes reales.</h2>
+      <p class="solution-sub">Combinamos generación de demanda, respuesta inmediata, seguimiento automático y un CRM para que tu centro fitness convierta más consultas sin sobrecargar a tu staff.</p>
+    </div>
+    <div class="solution-cards">
+      <div class="sol-card">
+        <div class="sol-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07M8.46 8.46a5 5 0 0 0 0 7.07"/></svg>
+        </div>
+        <h3>Generación de consultas</h3>
+        <p>Campañas en Meta diseñadas para atraer personas cercanas a tus sedes. Análisis del negocio, producción de creativos, guiones, edición y optimización semanal. Vos solo te grabás.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <h3>Agente IA multicanal</h3>
+        <p>Se conecta a Instagram y WhatsApp. Responde en menos de 10 segundos, califica prospectos, agenda clases y hace seguimiento automático según el estado de cada contacto.</p>
+      </div>
+      <div class="sol-card">
+        <div class="sol-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>CRM comercial centralizado</h3>
+        <p>Visualizás todas las conversaciones, el estado de cada prospecto, métricas comerciales y base de datos en tiempo real. Podés tomar control del chat en cualquier momento.</p>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero verlo aplicado en mi centro</a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="how-header">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2>De consultas perdidas a proceso comercial medible.</h2>
+      <p>Instalamos un sistema para que tu equipo no dependa de responder a tiempo, acordarse de hacer seguimiento o revisar chats manualmente.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <p>Analizamos tu negocio, tus servicios, tu zona y tu proceso comercial actual.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <p>Creamos campañas específicas para atraer clientes cercanos a tus sedes. Te damos guiones y te acompañamos en la grabación del contenido.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <p>Instalamos el agente de IA entrenado con tu información: horarios, servicios, tono de comunicación y criterios comerciales.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <p>Centralizamos todo el proceso en un CRM donde ves conversaciones, estados, métricas y base de datos en tiempo real.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">05</div>
+        <p>Empezás a recibir consultas todos los días y convertirlas en clientes. Tomás decisiones con datos reales, no intuición.</p>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero aplicarlo en mi centro </a>
+    </div>
+  </div>
+</section>
+
+<!-- VS -->
+<section class="vs-section">
+  <div class="vs-inner">
+    <div class="vs-header">
+      <span class="eyebrow">Comparación</span>
+      <h2 class="vs-title">Si no lo aplicás seguís dando ventaja y tus clientes se van con la competencia</h2>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col bad">
+        <div class="vs-col-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          Tu centro sin Goodly Fit
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon x"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <p>Sube contenido que no genera consultas reales</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon x"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <p>Genera consultas pero su equipo no tiene el tiempo de hacer seguimientos</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon x"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <p>Depende de tu equipo para responder (horas de demora)</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon x"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <p>Tomás decisiones con intuición, sin métricas reales ni visibilidad del proceso comercial</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon x"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#ff5050" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
+          <p>No logra escalar cuando el servicio tiene potencial de crecimiento</p>
+        </div>
+      </div>
+      <div class="vs-col good">
+        <div class="vs-col-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#7b9aff" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          Tu centro con Goodly Fit
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <p>Genera consultas todos los días y las conviertes en clientes</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <p>Seguimiento automático según el comportamiento del interesado</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <p>Respuesta automática en menos de 10 segundos por IA</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <p>Toman decisiones con reportes de métricas reales, conversaciones y estado de los interesados</p>
+        </div>
+        <div class="vs-item">
+          <div class="vs-icon check"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#213DF3" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <p>Escalable a múltiples sedes sin generar cuellos de botella adicionales</p>
+        </div>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero un sistema para ganar más clientes</a>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="results-section" id="resultados">
+  <div class="results-inner">
+    <div class="results-box">
+      <div class="results-left">
+        <span class="eyebrow">Resultados esperados</span>
+        <h2>Más consultas, más cierres y menos dependencia operativa.</h2>
+        <p>La ventaja no está solo en generar demanda. Está en que cada consulta recibe respuesta inmediata, seguimiento y trazabilidad comercial completa.</p>
+      </div>
+      <div class="results-grid">
+        <div class="result-card">
+          <div class="result-num">15–20</div>
+          <div class="result-label">consultas por día</div>
+        </div>
+        <div class="result-card">
+          <div class="result-num">10–20%</div>
+          <div class="result-label">conversión a clientes</div>
+        </div>
+        <div class="result-card">
+          <div class="result-num">70–90%</div>
+          <div class="result-label">respuestas automatizadas</div>
+        </div>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero lograr estos resultados</a>
+    </div>
+  </div>
+</section>
+
+<!-- CASES -->
+<section class="cases-section" id="casos">
+  <div class="cases-inner">
+    <div class="cases-header">
+      <div>
+        <span class="eyebrow">Casos de éxito</span>
+        <h2>Historias reales de crecimiento comercial.</h2>
+      </div>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-img-area">
+          <img class="case-cover" src="LOGOS CLIENTES/CamiloYanesHorizontal.png" alt="Portada Camilo Yanes">
+          <span class="case-badge">De 87 a 867 consultas/mes</span>
+        </div>
+        <div class="case-body">
+          <div class="case-name">Camilo Yanes</div>
+          <div class="case-title">Potenció el crecimiento de sus dos centros fitness</div>
+          <p class="case-desc">Tenía dos centros fitness y su crecimiento estaba limitado por la falta de un sistema comercial. Con la implementación, multiplicó el volumen de consultas y convirtió ese flujo en nuevos clientes de forma constante.</p>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-img-area">
+          <img class="case-cover" src="LOGOS CLIENTES/HouseFitHorizontal.png" alt="Portada House Fit">
+          <span class="case-badge">De 130 a 680 consultas/mes</span>
+        </div>
+        <div class="case-body">
+          <div class="case-name">House Fit</div>
+          <div class="case-title">Cuatro sedes con flujo constante de consultas y cierres</div>
+          <p class="case-desc">Operaba con cinco sedes pero no lograba escalar la generación de consultas. Con campañas optimizadas pasó a recibir cientos de consultas mensuales y mantiene hoy un ritmo comercial que le permite escalar.</p>
+        </div>
+      </div>
+      <div class="case-card">
+        <div class="case-img-area">
+          <img class="case-cover" src="LOGOS CLIENTES/AnimalHorizontal.png" alt="Portada Animal Gym">
+          <span class="case-badge">Expansión a sede de +1000 m²</span>
+        </div>
+        <div class="case-body">
+          <div class="case-name">Animal Gym</div>
+          <div class="case-title">Pasó de dos sedes a proyectar una escala mayor</div>
+          <p class="case-desc">Tenía dos sedes y necesitaba un sistema comercial que acompañara su crecimiento. Con una estructura clara de generación y conversión, logró expandirse a una sede de más de 1000mts2 y revolucionar su ciudad.</p>
+        </div>
+      </div>
+    </div>
+    <div class="section-cta">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero ser el próximo caso de éxito</a>
+    </div>
+  </div>
+</section>
+
+<!-- DEMO -->
+<section class="demo-section" id="demo">
+  <div class="demo-inner">
+    <div class="demo-box">
+      <div class="demo-copy">
+        <span class="eyebrow">Qué pasa en la demo</span>
+        <h2>Una llamada corta de revisión comercial aplicada a tu centro.</h2>
+        <p>Usamos la demo para entender cómo estás captando, respondiendo y cerrando clientes hoy. Si vemos una oportunidad real, te mostramos qué parte del proceso conviene automatizar y cómo quedaría implementado.</p>
+        <div class="demo-pills">
+          <span class="demo-pill">Demo 1 a 1</span>
+          <span class="demo-pill">Diagnóstico comercial</span>
+          <span class="demo-pill">Sin compromiso</span>
+        </div>
+      </div>
+      <div class="demo-steps">
+        <div class="demo-step">
+          <div class="demo-step-num">01</div>
+          <h3>Revisamos tu proceso actual</h3>
+          <p>Vemos cómo te entran las consultas, quién responde, dónde se pierden posibles clientes y qué parte hoy depende demasiado de tu equipo.</p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">02</div>
+          <h3>Te contamos como funciona el sistema</h3>
+          <p>Vas a ver anuncios, respuestas automáticas, seguimiento y CRM sobre un flujo comercial parecido al tuyo.</p>
+        </div>
+        <div class="demo-step">
+          <div class="demo-step-num">03</div>
+          <h3>Definimos si tiene sentido avanzar</h3>
+          <p>Si hay fit, te decimos qué nivel conviene y qué resultado sería razonable buscar. Si no, te lo vamos a decir también.</p>
+        </div>
+      </div>
+      <div class="demo-cta-wrap">
+        <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero aplicarlo en mi centro</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="faq-inner">
+    <div class="faq-header">
+      <span class="eyebrow">Preguntas frecuentes</span>
+      <h2>Las respuestas que suelen definir si un centro crece o sigue perdiendo oportunidades.</h2>
+      <p>Si estás evaluando implementar esto, estas son las dudas que realmente importan antes de tomar una decisión.</p>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Esto es un gasto más o una inversión rentable para mi centro fitness?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Es una inversión si te ayuda a generar más consultas, responderlas a tiempo y convertir más de esas consultas en clientes reales. El objetivo no es sumarte una herramienta más, sino ayudarte a vender más, recuperar oportunidades que hoy se pierden y mejorar la rentabilidad de tu centro fitness.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Cómo sé si esto le puede servir a mi centro fitness?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Primero revisamos cómo es tu proceso comercial actual y en qué parte se están frenando tus ventas. Si vemos una oportunidad real de crecimiento, te mostramos cómo aplicar el sistema en tu caso para que puedas ordenar mejor la operación, mejorar el seguimiento y crecer con más consistencia.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿En cuánto tiempo podría empezar a ver resultados?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">El aumento de consultas suele notarse rápido gracias a las campañas publicitarias. Y desde el primer momento, la inteligencia artificial mejora la velocidad de respuesta y el seguimiento comercial. Eso hace que en pocas semanas ya puedas empezar a notar más movimiento, más conversaciones bien trabajadas y más clientes nuevos.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué pasa si ya tengo gente respondiendo mensajes?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">No tenés que reemplazar a nadie. Cuando el sistema se ocupa de responder rápido, hacer seguimiento y ordenar el proceso comercial, tu equipo deja de correr atrás de los chats y puede enfocarse en lo que más valor genera: cerrar ventas y atender mejor a los clientes que llegan al centro.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Esto me va a sumar trabajo a mí o me lo va a simplificar?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Está pensado para simplificarte la operación. En vez de depender de revisar chats, acordarte seguimientos o resolver todo a último momento, pasás a tener un sistema que sostiene ese trabajo de forma ordenada. Eso te libera tiempo y te permite enfocarte en dirigir el negocio y hacerlo crecer.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Voy a poder ver si está funcionando o no?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Sí. Vas a poder ver consultas, conversaciones, estados y métricas dentro de un CRM. Eso cambia por completo la forma de decidir, porque dejás de manejarte por intuición y empezás a tomar decisiones con datos reales sobre lo que está funcionando y lo que hay que mejorar.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿La IA responde sola o yo puedo intervenir cuando quiera?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">La IA responde y hace seguimiento, pero el control sigue siendo tuyo. Podés revisar conversaciones, intervenir cuando haga falta y tomar el control cuando quieras. El sistema te da velocidad y constancia, sin sacarte visibilidad ni control sobre lo que pasa.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué pasa si hoy no estoy generando muchas consultas?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">En ese caso, el cambio puede ser todavía más grande. El sistema está pensado para generar más consultas con campañas enfocadas en tu zona, en tu servicio y en el perfil de cliente que querés atraer. No solo ordena lo que ya tenés: también te ayuda a aumentar el volumen de oportunidades comerciales.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Tengo que grabar contenido o estar encima de todo?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">No tenés que estar encima de todo. Solo necesitás dedicar alrededor de 90 minutos al mes para grabar contenido. Nosotros te guiamos en qué decir, cómo grabarte y además editamos el material. La parte estratégica la llevamos nosotros, para que tu contenido no sea una carga, sino una herramienta para atraer clientes.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué pasa si en la demo vemos que hoy no me conviene?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">La demo también sirve para validar eso. Si vemos que hoy no es el momento o que no hay un encaje real, te lo vamos a decir con claridad. Pero si sí lo hay, vas a salir de la reunión entendiendo dónde estás perdiendo ventas, qué parte del proceso conviene ordenar y cómo esto puede convertirse en una inversión rentable para tu centro fitness.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué es la gestión de publicidad?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Es la parte del sistema que se encarga de atraer nuevas consultas a tu centro fitness. Incluye crear, lanzar y optimizar campañas para que más personas de tu zona conozcan tu propuesta y te escriban con interés real. No se trata solo de poner anuncios: se trata de generar oportunidades comerciales con intención de compra.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué es un agente de inteligencia artificial para WhatsApp?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Es un sistema entrenado para responder consultas por WhatsApp de forma inmediata, clara y ordenada. Puede contestar preguntas frecuentes, hacer seguimiento y mantener activa la conversación para que no se enfríe el interés. En la práctica, funciona como un asistente comercial que trabaja todos los días para que no pierdas consultas por demora o falta de seguimiento.</div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q">
+        ¿Qué es un CRM?
+        <div class="faq-arrow"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></div>
+      </button>
+      <div class="faq-a">Un CRM es el lugar donde se ordena todo tu proceso comercial. Ahí podés ver quién consultó, en qué estado está cada conversación, quién agendó, quién compró y qué oportunidades siguen abiertas. En lugar de tener la información repartida entre chats y memoria, pasás a tener control, orden y visibilidad para vender mejor.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:40px;">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary">Quiero resolver esto en una demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="final-inner">
+    <h2>Dejá de perder consultas por falta de sistema.</h2>
+    <p>Agendá una demo y descubrí cómo este sistema puede generar consultas todos los días y convertirlas automáticamente en clientes de tu centro fitness.</p>
+    <div class="final-proof">
+      <span>Demo 1 a 1</span>
+      <span>Te mostramos casos reales</span>
+      <span>Vemos si aplica a tu operación</span>
+    </div>
+    <div class="final-ctas">
+      <a href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" class="btn-primary btn-large">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Quiero aplicar este sistema
+      </a>
+      <a href="https://wa.me/message/DZQ5JWLNQVIFI1" target="_blank" class="btn-outline btn-large">
+        Escribir por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <span class="footer-copy">© 2025 Goodly Fit. Todos los derechos reservados.</span>
+    <div class="footer-links">
+      <a href="#sistema">Sistema</a>
+      <a href="#casos">Casos</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://wa.me/message/DZQ5JWLNQVIFI1" target="_blank">WhatsApp</a>
+    </div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<a href="https://wa.me/message/DZQ5JWLNQVIFI1" target="_blank" class="wa-btn" aria-label="Escribir por WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+</a>
+
+<script>
+// FAQ ACCORDION
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.closest('.faq-item');
+    const isOpen=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!isOpen)item.classList.add('open');
+  });
+});
+</script>
+</body>
+</html>
