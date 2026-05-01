@@ -23,16 +23,15 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 fbq('init', '1280984843510755');
 fbq('track', 'PageView');
 
-document.addEventListener('click', function(event) {
-  var link = event.target.closest('a[href]');
+function trackMetaCta(eventName, link) {
   var href;
   var label;
   var section;
   var payload;
 
-  if (!link) return;
+  if (!window.fbq || !link) return;
 
-  href = link.href || '';
+  href = link.getAttribute('href') || link.href || '';
   label = (link.textContent || '').trim().replace(/\s+/g, ' ').slice(0, 120);
   section = link.closest('section');
   payload = {
@@ -44,12 +43,25 @@ document.addEventListener('click', function(event) {
     payload.section = section.id;
   }
 
+  window.fbq('track', eventName, payload);
+}
+
+document.addEventListener('click', function(event) {
+  var target = event.target;
+  var element = target && target.nodeType === 1 ? target : target && target.parentElement;
+  var link = element ? element.closest('a[href]') : null;
+  var href;
+
+  if (!link) return;
+
+  href = (link.getAttribute('href') || link.href || '').toLowerCase();
+
   if (href.indexOf('calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano') !== -1) {
-    fbq('track', 'Lead', payload);
+    trackMetaCta('Lead', link);
   }
 
   if (href.indexOf('wa.me/message/DZQ5JWLNQVIFI1') !== -1) {
-    fbq('track', 'Contact', payload);
+    trackMetaCta('Contact', link);
   }
 }, true);
 </script>
