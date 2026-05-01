@@ -46,23 +46,60 @@ function trackMetaCta(eventName, link) {
   window.fbq('track', eventName, payload);
 }
 
-document.addEventListener('click', function(event) {
-  var target = event.target;
+var lastMetaCtaEvent = {
+  href: '',
+  eventName: '',
+  at: 0
+};
+
+function trackMetaCtaFromTarget(target) {
   var element = target && target.nodeType === 1 ? target : target && target.parentElement;
   var link = element ? element.closest('a[href]') : null;
   var href;
+  var eventName;
+  var now;
 
   if (!link) return;
 
   href = (link.getAttribute('href') || link.href || '').toLowerCase();
+  eventName = '';
 
   if (href.indexOf('calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano') !== -1) {
-    trackMetaCta('Lead', link);
+    eventName = 'Lead';
   }
 
-  if (href.indexOf('wa.me/message/DZQ5JWLNQVIFI1') !== -1) {
-    trackMetaCta('Contact', link);
+  if (href.indexOf('wa.me/message/dzq5jwlnqvifi1') !== -1) {
+    eventName = 'Contact';
   }
+
+  if (!eventName) return;
+
+  now = Date.now();
+
+  if (
+    lastMetaCtaEvent.href === href &&
+    lastMetaCtaEvent.eventName === eventName &&
+    now - lastMetaCtaEvent.at < 1200
+  ) {
+    return;
+  }
+
+  lastMetaCtaEvent = {
+    href: href,
+    eventName: eventName,
+    at: now
+  };
+
+  trackMetaCta(eventName, link);
+}
+
+document.addEventListener('pointerdown', function(event) {
+  trackMetaCtaFromTarget(event.target);
+}, true);
+
+document.addEventListener('keydown', function(event) {
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  trackMetaCtaFromTarget(event.target);
 }, true);
 </script>
 <noscript>
