@@ -57,6 +57,14 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - El iframe volvio a ocupar el 100% del marco, sin escalados raros ni mascaras negras.
 - Auditoria local: iframe activo, clase `is-playing` aplicada, reproductor limpio al inicio y al final, 0 overflow horizontal.
 
+## Ajustes finales post-produccion - 2026-05-21
+
+- Headline: se redujo levemente el ancho/tamano y se agrego aire vertical para que no se corte.
+- Hero CTA: se agrandaron un poco la frase `Llena la aplicacion...` y el boton `Agendar ahora`.
+- Problema: se cambio `plata` por `dinero`.
+- VSL: se agrego un crop suave al iframe limpio de Loom para reducir barras negras arriba y abajo.
+- Camilo Yanes: se corrigio el borde negro derecho haciendo que la imagen exceda el contenedor y anulando el `max-width` global.
+
 ## Auditoria visual realizada
 
 - Desktop verificado: sin overflow horizontal.
