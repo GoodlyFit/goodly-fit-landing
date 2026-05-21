@@ -64,6 +64,7 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - Problema: se cambio `plata` por `dinero`.
 - VSL: se agrego un crop suave al iframe limpio de Loom para reducir barras negras arriba y abajo.
 - Camilo Yanes: se corrigio el borde negro derecho haciendo que la imagen exceda el contenedor y anulando el `max-width` global.
+- Headline fix: se elimino el `nowrap` rigido para que `clientes nuevos` no se corte en anchos intermedios.
 
 ## Auditoria visual realizada
 

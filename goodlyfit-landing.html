@@ -252,20 +252,22 @@
     }
 
     .hero-title {
-      max-width: min(100%, 1040px);
+      max-width: min(100%, 980px);
       font-size: clamp(2.4rem, 2.82vw, 3rem);
       line-height: 1.08;
       font-weight: 800;
+      text-wrap: balance;
     }
 
     .hero-title span {
-      display: block;
+      display: inline;
       color: transparent;
       background: linear-gradient(90deg, var(--white), #dfe5ff 42%, var(--blue-2) 100%);
       -webkit-background-clip: text;
       background-clip: text;
-      white-space: nowrap;
-      padding-bottom: 0.06em;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+      white-space: normal;
     }
 
     .hero-copy {
