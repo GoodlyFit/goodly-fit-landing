@@ -8,6 +8,7 @@
   "builds": [
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "goodlyfit-landing.html", "use": "@vercel/static" },
+    { "src": "assets/**/*", "use": "@vercel/static" },
     { "src": "public/**/*", "use": "@vercel/static" }
   ]
 }
