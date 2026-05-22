@@ -72,6 +72,11 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - Hero/headline: se aplico `assets/ui/fondo-headline.png` como fondo real de la primera seccion.
 - Hero/headline: se agregaron overlays oscuros/azules para conservar contraste del logo, headline, VSL y CTA sobre la imagen.
 
+## Ajuste fondos secciones - 2026-05-22
+
+- Problema, solucion y casos de exito ahora comparten el mismo fondo base limpio.
+- Se quitaron los fondos propios y lineas divisorias de problema y casos para que la secuencia se vea mas continua.
+
 ## Auditoria visual realizada
 
 - Desktop verificado: sin overflow horizontal.
