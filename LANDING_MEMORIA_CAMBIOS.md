@@ -66,6 +66,12 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - Camilo Yanes: se corrigio el borde negro derecho haciendo que la imagen exceda el contenedor y anulando el `max-width` global.
 - Headline fix: se elimino el `nowrap` rigido para que `clientes nuevos` no se corte en anchos intermedios.
 
+## Ajuste hero - 2026-05-22
+
+- Se copio `landing/fondo headline.png` a `assets/ui/fondo-headline.png` para que Vercel pueda servir el recurso desde la landing.
+- Hero/headline: se aplico `assets/ui/fondo-headline.png` como fondo real de la primera seccion.
+- Hero/headline: se agregaron overlays oscuros/azules para conservar contraste del logo, headline, VSL y CTA sobre la imagen.
+
 ## Auditoria visual realizada
 
 - Desktop verificado: sin overflow horizontal.

@@ -183,6 +183,14 @@
       position: relative;
       display: grid;
       align-items: start;
+      isolation: isolate;
+      background:
+        linear-gradient(180deg, rgba(7, 16, 18, 0.24) 0%, rgba(7, 16, 18, 0.42) 45%, rgba(12, 22, 24, 0.9) 86%, rgba(12, 22, 24, 1) 100%),
+        linear-gradient(90deg, rgba(7, 16, 18, 0.54), rgba(7, 16, 18, 0.12) 46%, rgba(7, 16, 18, 0.58)),
+        url("./assets/ui/fondo-headline.png");
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
     }
 
     .hero::before {
@@ -194,10 +202,11 @@
       height: 620px;
       transform: translateX(-50%);
       background:
-        linear-gradient(115deg, rgba(33, 61, 243, 0.22), transparent 54%),
-        linear-gradient(245deg, rgba(211, 213, 243, 0.12), transparent 58%);
+        radial-gradient(circle at 48% 20%, rgba(33, 61, 243, 0.34), transparent 54%),
+        linear-gradient(115deg, rgba(33, 61, 243, 0.16), transparent 58%),
+        linear-gradient(245deg, rgba(211, 213, 243, 0.08), transparent 62%);
       filter: blur(58px);
-      opacity: 0.75;
+      opacity: 0.62;
       pointer-events: none;
     }
 
