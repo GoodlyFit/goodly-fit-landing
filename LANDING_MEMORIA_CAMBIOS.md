@@ -83,6 +83,7 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - Los CTAs principales de la landing ahora apuntan a `/agenda/` en lugar de abrir Calendly directo en otra pestaña.
 - La pagina de agenda mantiene branding visual Goodly Fit, fondo premium, logo, vuelta a landing y tracking basico.
 - `vercel.json` ahora incluye `agenda/**/*` dentro de los builds estaticos.
+- Favicon: se copio `landing/Logo goodly fit.png` a `assets/logos/logo-goodly-fit-favicon.png` y se uso como icono de pestana en home y agenda.
 
 ## Auditoria visual realizada
 
