@@ -77,6 +77,13 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - Problema, solucion y casos de exito ahora comparten el mismo fondo base limpio.
 - Se quitaron los fondos propios y lineas divisorias de problema y casos para que la secuencia se vea mas continua.
 
+## Agenda y dominio - 2026-05-23
+
+- Se preparo la ruta `/agenda/` como pagina independiente para embeber el calendario de Calendly.
+- Los CTAs principales de la landing ahora apuntan a `/agenda/` en lugar de abrir Calendly directo en otra pestaña.
+- La pagina de agenda mantiene branding visual Goodly Fit, fondo premium, logo, vuelta a landing y tracking basico.
+- `vercel.json` ahora incluye `agenda/**/*` dentro de los builds estaticos.
+
 ## Auditoria visual realizada
 
 - Desktop verificado: sin overflow horizontal.

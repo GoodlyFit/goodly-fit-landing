@@ -1418,7 +1418,7 @@
 
           <div class="hero-cta reveal">
             <p class="cta-note">Llená la aplicación y agenda tu llamada.</p>
-            <a class="btn" href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" rel="noreferrer">
+            <a class="btn" href="/agenda/">
               Agendar ahora
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
                 <path d="M5 12h14"></path>
@@ -1587,7 +1587,7 @@
           <h2>Agenda tu llamada de aplicación.</h2>
           <p>Revisamos tu proceso actual y decidimos si es momento de instalar el sistema comercial de Goodly Fit.</p>
           <div class="final-actions">
-            <a class="btn" href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" rel="noreferrer">
+            <a class="btn" href="/agenda/">
               Agendar ahora
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
                 <path d="M5 12h14"></path>
@@ -1636,7 +1636,10 @@
       const href = link.href || "";
       const label = (link.textContent || "").trim().replace(/\s+/g, " ").slice(0, 120);
 
-      if (href.includes(calendarUrl)) {
+      const pathname = new URL(href, window.location.href).pathname.replace(/\/$/, "");
+      const isAgendaClick = href.includes(calendarUrl) || pathname === "/agenda";
+
+      if (isAgendaClick) {
         fbq("track", "Lead", {
           cta_label: label || "Agendar ahora",
           destination: href
