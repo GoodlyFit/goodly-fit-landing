@@ -85,6 +85,120 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 - `vercel.json` ahora incluye `agenda/**/*` dentro de los builds estaticos.
 - Favicon: se copio `landing/Logo goodly fit.png` a `assets/logos/logo-goodly-fit-favicon.png` y se uso como icono de pestana en home y agenda.
 
+## Mockup formulario propio - 2026-05-23
+
+- Se transformo `/agenda/` en un flujo de aplicacion previo a Calendly.
+- El formulario muestra una pregunta por pantalla, boton `Siguiente`, boton `Anterior` y progreso `Pregunta X de 10` + `Faltan X`.
+- Calendly queda bloqueado visualmente hasta completar la aplicacion.
+- Al terminar, se desbloquea el calendario y se arma la URL de Calendly con nombre, email y respuestas como parametros/prefill.
+- Se dejo preparado el evento `goodly_application_completed` para GTM/dataLayer y un `console.info` temporal con los datos para conectar despues a CRM, webhook o GHL.
+- No se hizo commit ni push: queda como mockup local para aprobacion visual.
+
+## Ajustes formulario propio - 2026-05-23
+
+- La aplicacion paso de 8 a 10 preguntas.
+- Se actualizo el ejemplo de gimnasio a `Goodly Gym, Buenos Aires, 7 sedes`.
+- Se agrego la pregunta multiseleccion `Como es tu sistema comercial hoy` con checkboxes: organico, CM, publicidad, chatbot WhatsApp y CRM.
+- Se cambio `socios activos` por `clientes activos` y se actualizaron los rangos: menos de 300, 300 a 700, 700 a 3000, + de 3000.
+- Se reemplazo la pregunta de decision por compromiso de asistencia/tomadores de decision.
+- Se agrego la pregunta de timing: listo para escalar ahora vs curioseando.
+
+## Ajustes formulario propio v2 - 2026-05-23
+
+- El formulario se mantuvo en 10 preguntas.
+- Se agrego la pregunta `Cual es el Instagram de tu gimnasio`.
+- Se agrego la pregunta de rol con opciones: Dueño, Gerente, Empleado, para filtrar curiosos y priorizar decisores.
+- Se eliminaron las preguntas `Cual es el principal problema comercial hoy` y `Contanos brevemente que estas intentando mejorar`.
+- La ultima pregunta ahora confirma que un asesor va a hablar por WhatsApp en pocos minutos y que, si no responde, la agenda se cancela automaticamente.
+- Se actualizaron los parametros enviados a Calendly con Instagram, rol, sistema comercial, clientes activos, asistencia y confirmacion por WhatsApp.
+
+## Ajustes formulario propio v3 - 2026-05-23
+
+- En sistema comercial se cambio `Tengo CM` por `Tengo Community Manager`.
+- Se agregaron `Tengo equipo de marketing interno` y `Ninguna de las anteriores`.
+- `Ninguna de las anteriores` funciona como opcion excluyente frente al resto de checkboxes.
+- En clientes activos se cambiaron los rangos finales a `700 a 1500 clientes` y `Mas de 1500 clientes`.
+- En asistencia se cambio el texto a `Asisto con mi socio y no vamos a llegar tarde`.
+- El desbloqueo de calendario dejo de depender del widget JS de Calendly: ahora se inyecta un iframe directo con parametros embed para que el calendario aparezca al tocar `Ver calendario`.
+
+## Ajuste copy centro fitness - 2026-05-23
+
+- En la landing principal y la pagina de agenda se cambio el termino visible `gimnasio/gimnasios` por `centro fitness/centros fitness`.
+- En agenda se cambio el titulo del formulario a `La situacion actual de tu centro fitness`.
+- La bajada del formulario ahora explica que las preguntas sirven para entender la situacion del centro fitness y preparar el diagnostico comercial de la llamada.
+- Se actualizo el placeholder de nombre del negocio a `Goodly Fitness, Buenos Aires, 7 sedes`.
+
+## Ajuste agenda simple - 2026-05-23
+
+- La frase superior de agenda quedo como `Primero completa la aplicacion. Luego vas a poder elegir dia y horario para revisar tu sistema comercial.`
+- Se elimino el titulo `La situacion actual de tu centro fitness` y su bajada para que el formulario arranque mas rapido con la primera pregunta.
+
+## Ajuste WhatsApp con pais - 2026-05-23
+
+- En la pregunta de WhatsApp se agrego un selector de pais con bandera, nombre y codigo internacional.
+- El selector incluye Argentina, Uruguay, Chile, Paraguay, Bolivia, Peru, Colombia, Mexico, Brasil, Ecuador, Venezuela, Costa Rica, Panama, Estados Unidos, Canada y Espana.
+- El numero local se carga en un campo separado y el dato final se combina como `codigo + numero` para enviarlo a Calendly/CRM.
+- La validacion del formulario ahora revisa todos los campos requeridos del paso activo, incluyendo `select`.
+
+## Ajustes UX formulario mobile - 2026-05-23
+
+- Se acerco el boton `Siguiente` al campo activo reduciendo el alto artificial del formulario y quitando el empuje hacia abajo.
+- En mobile se oculta el panel de calendario bloqueado hasta completar la aplicacion, para que el formulario sea mas corto.
+- Al completar la aplicacion en mobile se oculta el panel del formulario y se muestra el calendario.
+- El input de WhatsApp ahora queda como un solo campo compuesto: selector de pais con bandera/codigo, prefijo no editable y numero local.
+- Los paises del selector quedaron en orden alfabetico.
+- Se cambio la ayuda de sedes a `Si tenes mas de una sede, aclara todas las ciudades en las que estan` y el ejemplo a `Goodly Fit Gym (Buenos Aires, Rosario, Cordoba)`.
+- La opcion de marketing se cambio a `Tengo un equipo interno de marketing` para diferenciarla mejor de Community Manager.
+- La ayuda de decision/asistencia se cambio a `La llamada se realiza con las personas decisoras del negocio y en horario puntual`.
+- Se reforzo el desbloqueo de calendario con iframe directo, display explicito, modo calendario y fallback visible a Calendly.
+- El logo superior de agenda quedo centrado, sin boton `Volver a la landing`; el logo mantiene link a `/`.
+
+## Ajustes telefono y email - 2026-05-23
+
+- Se reemplazo el selector nativo de pais por un dropdown custom.
+- En el dropdown abierto se muestra bandera, pais y codigo; en la barra cerrada solo se muestra bandera y pais para no duplicar el codigo.
+- El codigo internacional queda bloqueado en un bloque separado y el telefono local se escribe a la derecha dentro de la misma barra, tambien en mobile.
+- Se agrego validacion fuerte de email con regex y mensaje: `El formato no es correcto. Ejemplo valido: juan.garcia@gmail.com`.
+- El input de email tambien recibio `pattern` para ayudar a que Calendly acepte el dato.
+
+## Fix dropdown pais - 2026-05-23
+
+- El desplegable de paises no se veia porque la barra de telefono tenia `overflow: hidden`.
+- Se cambio a `overflow: visible` y se subio el `z-index` del menu para que pueda desplegarse por encima del formulario.
+
+## Fix imagenes agenda file - 2026-05-24
+
+- Se copiaron los recursos visuales necesarios dentro de `agenda/assets/` para que la pagina funcione abriendola directo por `file://`.
+- La agenda ahora carga logo, favicon y fondo desde `./assets/...` en vez de `../assets/...`.
+- Se agrego cache bust `v=20260524` al logo y favicon de agenda.
+
+## Ajuste rol negocio - 2026-05-23
+
+- Se agrego `Coordinador` como opcion en la pregunta `Cual es tu rol en el negocio`.
+
+## Validaciones formulario - 2026-05-23
+
+- Nombre y apellido ahora exige minimo de caracteres y muestra `Escribi tu nombre y apellido para avanzar`.
+- Nombre del centro fitness exige minimo de caracteres y muestra `El nombre del centro fitness es demasiado corto. Agrega nombre y ciudad`.
+- Instagram exige minimo de caracteres y muestra `El Instagram es demasiado corto. Ingresa el usuario completo`.
+- WhatsApp valida cantidad minima de digitos segun codigo de pais antes de avanzar.
+- Se elimino la opcion `Tengo un equipo interno de marketing`.
+- En sistema comercial, `Tengo Community Manager` quedo como primera opcion.
+
+## Ajuste copy calendario bloqueado - 2026-05-24
+
+- En la tarjeta de calendario se elimino el texto `Primero completa la aplicacion para desbloquear horarios`.
+- El texto bloqueado ahora dice `Completa las preguntas para desbloquear opciones de dias y horarios`.
+
+## Efecto boton siguiente - 2026-05-24
+
+- El boton `Siguiente` recibio un efecto de brillo animado que cruza de izquierda a derecha, inspirado en la referencia visual de Doglio.
+
+## Ajuste fallback Calendly - 2026-05-24
+
+- Se quito el texto visible `Si el calendario no carga, abrilo desde aca: Abrir Calendly`.
+- Se elimino tambien el enlace de fallback oculto y sus referencias JS.
+
 ## Auditoria visual realizada
 
 - Desktop verificado: sin overflow horizontal.
@@ -97,3 +211,9 @@ Dejar terminada una landing VSL simple, potente y prolija para Goodly Fit, enfoc
 ## Nota operativa
 
 No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-landing`.
+
+## Fix final imagenes agenda - 2026-05-24
+
+- Se dejo la agenda apuntando a `../assets/...` para que el logo, favicon y fondo funcionen tanto en `file://`, localhost y Vercel.
+- Se mantuvo una copia fallback en `agenda/assets/` para cubrir versiones cacheadas que todavia busquen `./assets/...`.
+- Verificado en `http://127.0.0.1:4180/agenda/`: logo Goodly Fit carga con dimensiones reales y el fondo `fondo-headline.png` aparece aplicado en el `body`.
