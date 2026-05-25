@@ -1617,8 +1617,69 @@
     const vslFrame = document.querySelector("[data-video-frame]");
     const vslPlay = document.querySelector("[data-vsl-play]");
 
+    function getCookie(name) {
+      const cookie = document.cookie
+        .split("; ")
+        .find((item) => item.startsWith(`${name}=`));
+      return cookie ? decodeURIComponent(cookie.split("=").slice(1).join("=")) : "";
+    }
+
+    function getTrackingData() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        pageUrl: window.location.href,
+        referrer: document.referrer || "",
+        utmSource: params.get("utm_source") || "",
+        utmMedium: params.get("utm_medium") || "",
+        utmCampaign: params.get("utm_campaign") || "",
+        utmContent: params.get("utm_content") || "",
+        utmTerm: params.get("utm_term") || "",
+        fbclid: params.get("fbclid") || "",
+        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc")
+      };
+    }
+
+    function makeEventId(prefix) {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return `${prefix}_${window.crypto.randomUUID()}`;
+      }
+
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function pushDataLayer(eventName, payload = {}) {
+      if (!window.dataLayer) return;
+      window.dataLayer.push({
+        event: eventName,
+        ...payload
+      });
+    }
+
+    function trackMetaCustom(eventName, payload = {}, eventId = "") {
+      if (typeof fbq !== "function") return;
+      if (eventId) {
+        fbq("trackCustom", eventName, payload, { eventID: eventId });
+        return;
+      }
+      fbq("trackCustom", eventName, payload);
+    }
+
     if (vslFrame && vslPlay) {
       vslPlay.addEventListener("click", () => {
+        const tracking = getTrackingData();
+        const eventId = makeEventId("gf_vsl_play");
+        pushDataLayer("goodly_vsl_play", {
+          event_id: eventId,
+          tracking
+        });
+        trackMetaCustom("GoodlyVSLPlay", {
+          content_name: "Goodly Fit VSL",
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign
+        }, eventId);
+
         const iframe = document.createElement("iframe");
         iframe.src = loomEmbedUrl;
         iframe.title = "Goodly Fit VSL";
@@ -1632,7 +1693,7 @@
 
     document.addEventListener("click", function(event) {
       const link = event.target.closest("a[href]");
-      if (!link || typeof fbq !== "function") return;
+      if (!link) return;
 
       const href = link.href || "";
       const label = (link.textContent || "").trim().replace(/\s+/g, " ").slice(0, 120);
@@ -1641,10 +1702,21 @@
       const isAgendaClick = href.includes(calendarUrl) || pathname === "/agenda";
 
       if (isAgendaClick) {
-        fbq("track", "Lead", {
+        const tracking = getTrackingData();
+        const eventId = makeEventId("gf_cta_click");
+        pushDataLayer("goodly_cta_click", {
+          event_id: eventId,
           cta_label: label || "Agendar ahora",
-          destination: href
+          destination: href,
+          tracking
         });
+        trackMetaCustom("GoodlyCTAClick", {
+          cta_label: label || "Agendar ahora",
+          destination: href,
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign
+        }, eventId);
       }
 
     }, true);

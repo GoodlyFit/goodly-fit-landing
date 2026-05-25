@@ -1092,6 +1092,105 @@
     };
     let currentStep = 0;
     let calendarLoaded = false;
+    let applicationStarted = false;
+    let applicationCompleted = false;
+
+    function getCookie(name) {
+      const cookie = document.cookie
+        .split("; ")
+        .find((item) => item.startsWith(`${name}=`));
+      return cookie ? decodeURIComponent(cookie.split("=").slice(1).join("=")) : "";
+    }
+
+    function getTrackingData() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        pageUrl: window.location.href,
+        referrer: document.referrer || "",
+        utmSource: params.get("utm_source") || "",
+        utmMedium: params.get("utm_medium") || "",
+        utmCampaign: params.get("utm_campaign") || "",
+        utmContent: params.get("utm_content") || "",
+        utmTerm: params.get("utm_term") || "",
+        fbclid: params.get("fbclid") || "",
+        fbp: getCookie("_fbp"),
+        fbc: getCookie("_fbc")
+      };
+    }
+
+    function makeEventId(prefix) {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return `${prefix}_${window.crypto.randomUUID()}`;
+      }
+
+      return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    }
+
+    function pushDataLayer(eventName, payload = {}) {
+      if (!window.dataLayer) return;
+      window.dataLayer.push({
+        event: eventName,
+        ...payload
+      });
+    }
+
+    function trackMetaCustom(eventName, payload = {}) {
+      if (typeof fbq !== "function") return;
+      fbq("trackCustom", eventName, payload);
+    }
+
+    function trackMetaLead(application, tracking, eventId) {
+      if (typeof fbq !== "function") return;
+      fbq("track", "Lead", {
+        content_name: "Goodly Fit application",
+        content_category: "Core Gold commercial diagnosis",
+        business_role: application.businessRole,
+        active_clients: application.activeClients,
+        utm_source: tracking.utmSource,
+        utm_medium: tracking.utmMedium,
+        utm_campaign: tracking.utmCampaign
+      }, {
+        eventID: eventId
+      });
+    }
+
+    function submitApplication(application, eventId, tracking) {
+      const payload = {
+        event: "goodly_application_completed",
+        eventId,
+        application,
+        tracking
+      };
+
+      return fetch("/api/lead", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).then((response) => {
+        if (!response.ok) throw new Error(`CRM status ${response.status}`);
+        return response.json().catch(() => ({}));
+      }).catch((error) => {
+        console.warn("No se pudo enviar la aplicacion a CRM:", error);
+      });
+    }
+
+    function trackApplicationStarted() {
+      if (applicationStarted) return;
+      applicationStarted = true;
+      const tracking = getTrackingData();
+      const eventId = makeEventId("gf_application_started");
+      pushDataLayer("goodly_application_started", {
+        event_id: eventId,
+        tracking
+      });
+      trackMetaCustom("GoodlyApplicationStarted", {
+        content_name: "Goodly Fit application",
+        utm_source: tracking.utmSource,
+        utm_medium: tracking.utmMedium,
+        utm_campaign: tracking.utmCampaign
+      });
+    }
 
     function updateStep() {
       steps.forEach((step, index) => {
@@ -1225,6 +1324,8 @@
     function showCalendar() {
       const application = getApplicationData();
       const calendlyUrl = buildCalendlyUrl(application);
+      const tracking = getTrackingData();
+      const eventId = makeEventId("gf_application_completed");
       applicationCard.classList.add("is-calendar-mode");
       calendarPanel.classList.add("is-ready");
       calendlyWidget.hidden = false;
@@ -1233,8 +1334,19 @@
       remainingLabel.textContent = "Elegí horario";
       nextButton.textContent = "Calendario abierto";
 
-      if (window.dataLayer) {
-        window.dataLayer.push({ event: "goodly_application_completed", application });
+      if (!applicationCompleted) {
+        applicationCompleted = true;
+        pushDataLayer("goodly_application_completed", {
+          event_id: eventId,
+          application,
+          tracking
+        });
+        pushDataLayer("goodly_calendar_opened", {
+          event_id: makeEventId("gf_calendar_opened"),
+          source_event_id: eventId
+        });
+        trackMetaLead(application, tracking, eventId);
+        submitApplication(application, eventId, tracking);
       }
 
       console.info("Aplicación Goodly Fit capturada para conectar a CRM:", application);
@@ -1268,6 +1380,10 @@
 
     nextButton.addEventListener("click", function() {
       if (!validateCurrentStep()) return;
+
+      if (currentStep === 0) {
+        trackApplicationStarted();
+      }
 
       if (currentStep < steps.length - 1) {
         currentStep += 1;
@@ -1357,12 +1473,24 @@
     window.addEventListener("message", function(event) {
       if (event.origin !== "https://calendly.com" || !event.data || !event.data.event) return;
 
-      if (event.data.event === "calendly.event_scheduled" && typeof fbq === "function") {
-        fbq("track", "Schedule");
-      }
+      if (event.data.event === "calendly.event_scheduled") {
+        const scheduleEventId = makeEventId("gf_call_scheduled");
+        const tracking = getTrackingData();
+        if (typeof fbq === "function") {
+          fbq("track", "Schedule", {
+            content_name: "Goodly Fit diagnosis call",
+            utm_source: tracking.utmSource,
+            utm_medium: tracking.utmMedium,
+            utm_campaign: tracking.utmCampaign
+          }, {
+            eventID: scheduleEventId
+          });
+        }
 
-      if (event.data.event === "calendly.event_scheduled" && window.dataLayer) {
-        window.dataLayer.push({ event: "calendly_event_scheduled" });
+        pushDataLayer("calendly_event_scheduled", {
+          event_id: scheduleEventId,
+          tracking
+        });
       }
     });
   </script>

@@ -217,3 +217,12 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - Se dejo la agenda apuntando a `../assets/...` para que el logo, favicon y fondo funcionen tanto en `file://`, localhost y Vercel.
 - Se mantuvo una copia fallback en `agenda/assets/` para cubrir versiones cacheadas que todavia busquen `./assets/...`.
 - Verificado en `http://127.0.0.1:4180/agenda/`: logo Goodly Fit carga con dimensiones reales y el fondo `fondo-headline.png` aparece aplicado en el `body`.
+
+## Tracking CRM, Meta y dashboard - 2026-05-25
+
+- Se agrego el endpoint seguro `api/lead.js` para enviar aplicaciones completas a GHL por webhook sin exponer la URL dentro del HTML.
+- El formulario de `/agenda/` ahora genera eventos de embudo: `goodly_application_started`, `goodly_application_completed`, `goodly_calendar_opened` y `calendly_event_scheduled`.
+- Meta Pixel ahora marca `Lead` solo cuando la aplicacion fue completada, no cuando alguien toca el boton de agenda.
+- La landing principal ahora mide `goodly_vsl_play` y `goodly_cta_click` en `dataLayer`, mas eventos custom de Meta (`GoodlyVSLPlay` y `GoodlyCTAClick`).
+- Se incorporo captura de UTMs, `fbclid`, `_fbp`, `_fbc`, URL y referrer para que GTM/GA4, Meta y GHL puedan leer mejor la fuente de cada lead.
+- El endpoint incluye soporte opcional para Meta Conversions API si se configuran `META_CAPI_TOKEN`, `META_PIXEL_ID` y `META_GRAPH_API_VERSION` en Vercel.

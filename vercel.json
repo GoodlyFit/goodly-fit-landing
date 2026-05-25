@@ -6,6 +6,7 @@
   "outputDirectory": ".",
   "cleanUrls": true,
   "builds": [
+    { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "index.html", "use": "@vercel/static" },
     { "src": "agenda/**/*", "use": "@vercel/static" },
     { "src": "goodlyfit-landing.html", "use": "@vercel/static" },
