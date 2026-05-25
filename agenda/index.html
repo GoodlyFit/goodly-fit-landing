@@ -1094,6 +1094,7 @@
     let calendarLoaded = false;
     let applicationStarted = false;
     let applicationCompleted = false;
+    let completedApplicationData = null;
 
     function getCookie(name) {
       const cookie = document.cookie
@@ -1172,6 +1173,28 @@
         return response.json().catch(() => ({}));
       }).catch((error) => {
         console.warn("No se pudo enviar la aplicacion a CRM:", error);
+      });
+    }
+
+    function submitScheduledCall(application, calendly, eventId, tracking) {
+      const payload = {
+        event: "goodly_call_scheduled",
+        eventId,
+        application,
+        calendly,
+        tracking
+      };
+
+      return fetch("/api/appointment.js", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(payload),
+        keepalive: true
+      }).then((response) => {
+        if (!response.ok) throw new Error(`Appointment CRM status ${response.status}`);
+        return response.json().catch(() => ({}));
+      }).catch((error) => {
+        console.warn("No se pudo enviar la cita agendada a CRM:", error);
       });
     }
 
@@ -1326,6 +1349,7 @@
       const calendlyUrl = buildCalendlyUrl(application);
       const tracking = getTrackingData();
       const eventId = makeEventId("gf_application_completed");
+      completedApplicationData = application;
       applicationCard.classList.add("is-calendar-mode");
       calendarPanel.classList.add("is-ready");
       calendlyWidget.hidden = false;
@@ -1476,6 +1500,8 @@
       if (event.data.event === "calendly.event_scheduled") {
         const scheduleEventId = makeEventId("gf_call_scheduled");
         const tracking = getTrackingData();
+        const calendlyPayload = event.data.payload || {};
+        const application = completedApplicationData || getApplicationData();
         if (typeof fbq === "function") {
           fbq("track", "Schedule", {
             content_name: "Goodly Fit diagnosis call",
@@ -1489,8 +1515,11 @@
 
         pushDataLayer("calendly_event_scheduled", {
           event_id: scheduleEventId,
+          calendly: calendlyPayload,
           tracking
         });
+
+        submitScheduledCall(application, calendlyPayload, scheduleEventId, tracking);
       }
     });
   </script>

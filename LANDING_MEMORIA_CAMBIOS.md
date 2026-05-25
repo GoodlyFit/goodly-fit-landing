@@ -232,3 +232,22 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - Se agrego una accion `Note` para guardar dentro del contacto las respuestas de la aplicacion, UTMs, URL, fbclid y Event ID.
 - Prueba real validada: el contacto `Test Goodly Nota` entro en GHL y la nota `Aplicacion Goodly Fit` muestra respuestas y tracking.
 - Meta Pixel browser-side quedo activo en landing y agenda. Meta CAPI server-side queda preparado, pero salta `missing_meta_capi_token` hasta configurar el token en Vercel.
+
+## Automatizacion cita agendada - 2026-05-25
+
+- Se agrego `api/appointment.js` para recibir el evento `calendly.event_scheduled` desde `/agenda/` y reenviarlo a GHL por webhook.
+- `/agenda/` ahora conserva los datos de la aplicacion completada y, cuando Calendly confirma la cita, envia aplicacion + payload de Calendly + tracking a `/api/appointment.js`.
+- El endpoint puede hidratar datos reales de Calendly si se configura `CALENDLY_TOKEN`: fecha, hora, zona horaria, link de reunion, link de reprogramacion y link de cancelacion.
+- El endpoint envia a GHL campos planos para automatizaciones: `name`, `email`, `phone`, `gym`, `instagram`, `businessRole`, `commercialSystem`, `activeClients`, `decisionAttendance`, `whatsappConfirmation`, `appointmentDate`, `appointmentTime`, `meetingLink`, `rescheduleUrl`, `cancelUrl`, UTMs y tracking.
+- En GHL se creo el workflow borrador `Goodly Fit - Cita agendada Calendly`.
+- Trigger configurado: `Inbound Webhook Cita Calendly Goodly Fit`.
+- Webhook GHL de cita: `https://services.leadconnectorhq.com/hooks/4S1B54UPr516ZRNelvK0/webhook-trigger/88d0ff4f-cb3d-430e-a39e-0968d070343d`.
+- El trigger recibio una prueba por `curl` y GHL devolvio `Success: test request received`.
+- Accion `Create Contact` configurada en el workflow de cita: nombre, email, telefono, business name y source `Goodly Fit - Agenda Calendly`.
+- Accion `Note` configurada para guardar las respuestas de aplicacion, datos de cita Calendly, links y tracking.
+- Accion `Add Tag` configurada con `goodly fit landing`, `cita agendada` y `pendiente confirmacion`.
+- `GHL_APPOINTMENT_WEBHOOK_URL` quedo agregado en Vercel. Hace falta nuevo deploy para que el endpoint live lo tome.
+- Con confirmacion explicita del usuario, se agrego una accion `WhatsApp` free-form al workflow publicado: pide responder `CONFIRMO` y avisa que Nahuel se comunica a la brevedad.
+- Se agrego una rama `Undelivered` despues del WhatsApp: si el mensaje no se entrega, envia email interno a `nahuel.turano@goodlyfit.app` con datos del contacto, respuestas y cita para seguimiento manual.
+- El workflow `Goodly Fit - Cita agendada Calendly` quedo guardado y publicado en GHL.
+- Pendiente para enriquecer recordatorios con dia, hora y link reales: configurar `CALENDLY_TOKEN` en Vercel para hidratar el evento Calendly desde el endpoint.
