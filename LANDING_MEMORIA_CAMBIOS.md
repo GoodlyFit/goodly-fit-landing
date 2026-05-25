@@ -227,3 +227,8 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - Se incorporo captura de UTMs, `fbclid`, `_fbp`, `_fbc`, URL y referrer para que GTM/GA4, Meta y GHL puedan leer mejor la fuente de cada lead.
 - El endpoint incluye soporte opcional para Meta Conversions API si se configuran `META_CAPI_TOKEN`, `META_PIXEL_ID` y `META_GRAPH_API_VERSION` en Vercel.
 - En esta configuracion estatica de Vercel, el formulario publica al endpoint desplegado como `/api/lead.js`.
+- En GHL se configuro el workflow `Landing Goodly Fit - Aplicaciones` con trigger `Inbound Webhook Aplicacion landing Goodly Fit`.
+- El workflow crea/actualiza contacto con nombre, email, telefono, negocio y source `Landing Goodly Fit`.
+- Se agrego una accion `Note` para guardar dentro del contacto las respuestas de la aplicacion, UTMs, URL, fbclid y Event ID.
+- Prueba real validada: el contacto `Test Goodly Nota` entro en GHL y la nota `Aplicacion Goodly Fit` muestra respuestas y tracking.
+- Meta Pixel browser-side quedo activo en landing y agenda. Meta CAPI server-side queda preparado, pero salta `missing_meta_capi_token` hasta configurar el token en Vercel.
