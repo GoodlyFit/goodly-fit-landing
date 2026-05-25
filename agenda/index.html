@@ -1198,6 +1198,26 @@
       });
     }
 
+    function storeAppointmentConfirmation(application, calendly, eventId) {
+      try {
+        window.sessionStorage.setItem("goodlyAppointmentConfirmation", JSON.stringify({
+          eventId,
+          name: application.name || "",
+          gym: application.gym || "",
+          email: application.email || "",
+          calendlyEventUri: calendly?.event?.uri || "",
+          calendlyInviteeUri: calendly?.invitee?.uri || ""
+        }));
+      } catch (error) {
+        console.warn("No se pudo guardar la confirmacion local de agenda:", error);
+      }
+    }
+
+    function goToConfirmationPage() {
+      const confirmationUrl = new URL("./confirmacion/", window.location.href);
+      window.location.href = confirmationUrl.toString();
+    }
+
     function trackApplicationStarted() {
       if (applicationStarted) return;
       applicationStarted = true;
@@ -1519,7 +1539,11 @@
           tracking
         });
 
-        submitScheduledCall(application, calendlyPayload, scheduleEventId, tracking);
+        storeAppointmentConfirmation(application, calendlyPayload, scheduleEventId);
+        submitScheduledCall(application, calendlyPayload, scheduleEventId, tracking)
+          .finally(() => {
+            window.setTimeout(goToConfirmationPage, 450);
+          });
       }
     });
   </script>

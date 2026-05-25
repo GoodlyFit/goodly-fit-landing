@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Llamada confirmada - Goodly Fit</title>
+  <meta
+    name="description"
+    content="Tu llamada con Goodly Fit fue agendada. Revisá los próximos pasos para confirmar asistencia."
+  />
+
+  <!-- Google Tag Manager -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({"gtm.start":new Date().getTime(),event:"gtm.js"});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!="dataLayer"?"&l="+l:"";j.async=true;j.src="https://www.googletagmanager.com/gtm.js?id="+i+dl;f.parentNode.insertBefore(j,f);})(window,document,"script","dataLayer","GTM-K6Q9FLRG");
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <link rel="icon" type="image/png" href="../../assets/logos/logo-goodly-fit-favicon.png?v=20260524" />
+  <link rel="apple-touch-icon" href="../../assets/logos/logo-goodly-fit-favicon.png?v=20260524" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version="2.0";
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,"script",
+    "https://connect.facebook.net/en_US/fbevents.js");
+    fbq("init", "1280984843510755");
+    fbq("track", "PageView");
+    fbq("trackCustom", "GoodlyScheduleConfirmationView");
+  </script>
+  <noscript>
+    <img
+      height="1"
+      width="1"
+      style="display:none"
+      src="https://www.facebook.com/tr?id=1280984843510755&ev=PageView&noscript=1"
+      alt=""
+    />
+  </noscript>
+
+  <style>
+    :root {
+      --blue: #213df3;
+      --blue-2: #6378ff;
+      --blue-3: #d3d5f3;
+      --dark: #0c1618;
+      --dark-3: #071012;
+      --white: #fcfcfc;
+      --muted: rgba(252, 252, 252, 0.72);
+      --line: rgba(252, 252, 252, 0.14);
+      --shadow-blue: rgba(33, 61, 243, 0.42);
+      --max: 980px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--dark);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      font-family: "Manrope", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+      background:
+        linear-gradient(180deg, rgba(7, 16, 18, 0.14) 0%, rgba(7, 16, 18, 0.78) 58%, rgba(12, 22, 24, 1) 100%),
+        linear-gradient(90deg, rgba(7, 16, 18, 0.72), rgba(7, 16, 18, 0.18) 48%, rgba(7, 16, 18, 0.76)),
+        url("../../assets/ui/fondo-headline.png"),
+        var(--dark);
+      background-size: cover, cover, cover, auto;
+      background-position: center top;
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.58;
+      background:
+        linear-gradient(115deg, transparent 0%, rgba(33, 61, 243, 0.17) 35%, transparent 57%),
+        repeating-linear-gradient(90deg, rgba(252, 252, 252, 0.035) 0 1px, transparent 1px 92px);
+      mask-image: linear-gradient(to bottom, black 0%, black 78%, transparent 100%);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.45'/%3E%3C/svg%3E");
+      mix-blend-mode: screen;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      min-height: 100vh;
+      padding: 28px 0 44px;
+    }
+
+    .container {
+      width: min(100% - 112px, var(--max));
+      margin-inline: auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 54px;
+    }
+
+    .logo {
+      display: inline-flex;
+      width: 218px;
+      filter: drop-shadow(0 10px 36px rgba(33, 61, 243, 0.26));
+    }
+
+    .logo img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .confirmation-shell {
+      position: relative;
+      max-width: 960px;
+      margin-inline: auto;
+      border-radius: 26px;
+      isolation: isolate;
+    }
+
+    .confirmation-shell::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      z-index: -2;
+      border-radius: inherit;
+      background: linear-gradient(115deg, rgba(33, 61, 243, 0.95), rgba(211, 213, 243, 0.32), rgba(33, 61, 243, 0.68));
+    }
+
+    .confirmation-shell::after {
+      content: "";
+      position: absolute;
+      inset: -34px -8px;
+      z-index: -3;
+      border-radius: 34px;
+      background: linear-gradient(115deg, rgba(33, 61, 243, 0.36), transparent 48%, rgba(211, 213, 243, 0.15));
+      filter: blur(34px);
+      opacity: 0.8;
+    }
+
+    .confirmation-card {
+      overflow: hidden;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(252, 252, 252, 0.1), rgba(252, 252, 252, 0.03)),
+        radial-gradient(circle at 78% 16%, rgba(33, 61, 243, 0.2), transparent 36%),
+        rgba(6, 14, 16, 0.88);
+      box-shadow:
+        inset 0 1px 0 rgba(252, 252, 252, 0.16),
+        0 34px 100px rgba(0, 0, 0, 0.52);
+      backdrop-filter: blur(18px);
+    }
+
+    .confirmation-hero {
+      display: grid;
+      justify-items: center;
+      padding: clamp(34px, 6vw, 62px) clamp(22px, 5vw, 68px) 30px;
+      text-align: center;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(99, 120, 255, 0.38);
+      border-radius: 999px;
+      background: rgba(33, 61, 243, 0.16);
+      color: var(--blue-3);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .status-pill::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #58ff8b;
+      box-shadow: 0 0 18px rgba(88, 255, 139, 0.65);
+    }
+
+    h1 {
+      max-width: 760px;
+      margin-top: 22px;
+      font-size: clamp(2.5rem, 5.6vw, 5rem);
+      line-height: 0.98;
+      font-weight: 800;
+      text-wrap: balance;
+    }
+
+    h1 span {
+      color: transparent;
+      background: linear-gradient(90deg, var(--white), #dfe5ff 44%, var(--blue-2) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+    }
+
+    .lead {
+      max-width: 680px;
+      margin-top: 18px;
+      color: rgba(252, 252, 252, 0.78);
+      font-size: 1.12rem;
+      font-weight: 700;
+    }
+
+    .summary {
+      display: none;
+      max-width: 680px;
+      margin-top: 22px;
+      padding: 14px 16px;
+      border: 1px solid rgba(252, 252, 252, 0.12);
+      border-radius: 16px;
+      background: rgba(252, 252, 252, 0.06);
+      color: rgba(252, 252, 252, 0.76);
+      font-weight: 800;
+    }
+
+    .summary.is-visible {
+      display: block;
+    }
+
+    .next-steps {
+      display: grid;
+      gap: 12px;
+      padding: 0 clamp(18px, 4vw, 56px) clamp(28px, 5vw, 54px);
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid rgba(252, 252, 252, 0.12);
+      border-radius: 16px;
+      background: rgba(252, 252, 252, 0.06);
+      box-shadow: inset 0 1px 0 rgba(252, 252, 252, 0.06);
+    }
+
+    .step-number {
+      display: inline-grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(252, 252, 252, 0.22), transparent 48%), linear-gradient(90deg, var(--blue), var(--blue-2));
+      box-shadow: 0 12px 28px rgba(33, 61, 243, 0.3);
+      color: #fff;
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    .step-card strong {
+      display: block;
+      color: var(--white);
+      font-size: 1.03rem;
+      font-weight: 900;
+    }
+
+    .step-card p {
+      margin-top: 4px;
+      color: var(--muted);
+      font-weight: 650;
+    }
+
+    .important-note {
+      margin: 0 clamp(18px, 4vw, 56px) clamp(24px, 4vw, 42px);
+      padding: 18px;
+      border: 1px solid rgba(99, 120, 255, 0.32);
+      border-radius: 16px;
+      background: rgba(33, 61, 243, 0.12);
+      color: rgba(252, 252, 252, 0.82);
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 0 clamp(18px, 4vw, 56px) clamp(34px, 5vw, 58px);
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      min-height: 54px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      font: inherit;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .primary-btn {
+      position: relative;
+      min-width: 210px;
+      overflow: hidden;
+      padding: 0 26px;
+      border: 1px solid rgba(252, 252, 252, 0.2);
+      color: #fff;
+      background:
+        linear-gradient(180deg, rgba(252, 252, 252, 0.24), transparent 46%),
+        linear-gradient(90deg, var(--blue), var(--blue-2));
+      box-shadow:
+        0 0 0 1px rgba(33, 61, 243, 0.24),
+        0 15px 42px rgba(33, 61, 243, 0.33),
+        inset 0 1px 0 rgba(252, 252, 252, 0.32);
+    }
+
+    .primary-btn::after {
+      content: "";
+      position: absolute;
+      inset: -45% auto -45% -70%;
+      width: 48%;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.72), transparent);
+      transform: skewX(-18deg);
+      animation: buttonShine 2.8s ease-in-out infinite;
+    }
+
+    .secondary-btn {
+      min-width: 180px;
+      padding: 0 22px;
+      border: 1px solid rgba(252, 252, 252, 0.14);
+      background: rgba(252, 252, 252, 0.055);
+      color: rgba(252, 252, 252, 0.84);
+    }
+
+    @keyframes buttonShine {
+      0%,
+      35% {
+        left: -70%;
+      }
+
+      62%,
+      100% {
+        left: 125%;
+      }
+    }
+
+    footer {
+      margin-top: 38px;
+      text-align: center;
+      color: rgba(252, 252, 252, 0.5);
+      font-size: 0.92rem;
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 22px 0 34px;
+      }
+
+      .container {
+        width: min(100% - 32px, var(--max));
+      }
+
+      .topbar {
+        margin-bottom: 38px;
+      }
+
+      .logo {
+        width: 198px;
+      }
+
+      .confirmation-shell,
+      .confirmation-card {
+        border-radius: 18px;
+      }
+
+      h1 {
+        font-size: 2.72rem;
+        line-height: 1.02;
+      }
+
+      .lead {
+        font-size: 1rem;
+      }
+
+      .step-card {
+        padding: 16px;
+      }
+
+      .actions {
+        display: grid;
+      }
+
+      .primary-btn,
+      .secondary-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .container {
+        width: min(100% - 24px, var(--max));
+      }
+
+      h1 {
+        font-size: 2.32rem;
+      }
+
+      .confirmation-hero {
+        padding-inline: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K6Q9FLRG" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <main class="page">
+    <div class="container">
+      <header class="topbar">
+        <a class="logo" href="/" aria-label="Volver a Goodly Fit">
+          <img src="../../assets/logos/logo-gf-cropped.png?v=20260524" alt="Goodly Fit" />
+        </a>
+      </header>
+
+      <section class="confirmation-shell" aria-label="Confirmación de llamada Goodly Fit">
+        <div class="confirmation-card">
+          <div class="confirmation-hero">
+            <span class="status-pill">Llamada agendada</span>
+            <h1>Gracias. Tu llamada con <span>Goodly Fit</span> quedó agendada.</h1>
+            <p class="lead">Ya recibimos tu aplicación. Ahora seguimos el proceso de confirmación para llegar a la llamada con contexto y revisar si podemos ayudarte.</p>
+            <div class="summary" id="appointmentSummary" aria-live="polite"></div>
+          </div>
+
+          <div class="next-steps">
+            <article class="step-card">
+              <span class="step-number">1</span>
+              <div>
+                <strong>Revisá tu email.</strong>
+                <p>Calendly te va a enviar la confirmación con el día, horario y link de la reunión.</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <span class="step-number">2</span>
+              <div>
+                <strong>Confirmá asistencia por WhatsApp.</strong>
+                <p>Un asesor de Goodly Fit te va a escribir en pocos minutos. Respondé <strong>CONFIRMO</strong> para mantener tu horario reservado.</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <span class="step-number">3</span>
+              <div>
+                <strong>Asistí puntual con las personas decisoras.</strong>
+                <p>Si la decisión la toman entre socios, asegúrense de estar todos presentes desde el inicio de la llamada.</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <span class="step-number">4</span>
+              <div>
+                <strong>Tené a mano tu situación comercial actual.</strong>
+                <p>Nos sirve revisar consultas, ventas, WhatsApp, anuncios, redes, CRM y cualquier dato que muestre cómo venden hoy.</p>
+              </div>
+            </article>
+          </div>
+
+          <p class="important-note">Importante: si no respondés el WhatsApp de confirmación, la agenda puede cancelarse automáticamente para liberar el horario.</p>
+
+          <div class="actions">
+            <a class="primary-btn" href="/">Volver a Goodly Fit</a>
+            <a class="secondary-btn" href="/agenda/">Agendar otra llamada</a>
+          </div>
+        </div>
+      </section>
+
+      <footer>© 2026 Goodly Fit. Todos los derechos reservados.</footer>
+    </div>
+  </main>
+
+  <script>
+    const summary = document.getElementById("appointmentSummary");
+
+    function pushDataLayer(eventName, payload = {}) {
+      if (!window.dataLayer) return;
+      window.dataLayer.push({
+        event: eventName,
+        ...payload
+      });
+    }
+
+    try {
+      const rawConfirmation = window.sessionStorage.getItem("goodlyAppointmentConfirmation");
+      const confirmation = rawConfirmation ? JSON.parse(rawConfirmation) : null;
+      if (confirmation && (confirmation.name || confirmation.gym || confirmation.email)) {
+        const details = [];
+        if (confirmation.name) details.push(confirmation.name);
+        if (confirmation.gym) details.push(confirmation.gym);
+        if (confirmation.email) details.push(confirmation.email);
+        summary.textContent = `Aplicación recibida: ${details.join(" · ")}`;
+        summary.classList.add("is-visible");
+      }
+
+      pushDataLayer("goodly_schedule_confirmation_view", {
+        event_id: confirmation?.eventId || "",
+        has_confirmation_context: Boolean(confirmation)
+      });
+    } catch (error) {
+      console.warn("No se pudo leer la confirmacion local de agenda:", error);
+      pushDataLayer("goodly_schedule_confirmation_view", {
+        event_id: "",
+        has_confirmation_context: false
+      });
+    }
+  </script>
+</body>
+</html>

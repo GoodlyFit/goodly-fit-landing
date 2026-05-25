@@ -254,3 +254,10 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - Prueba live verificada contra `https://www.goodlyfit.app/api/appointment.js`: respuesta `crm.skipped:false`, `status:200`.
 - Logs de GHL verificados con contacto de prueba `Test Goodly Cita Final`: `Create Contact`, `Note`, `Add Tag` e `Internal Notification` ejecutaron; `WhatsApp` fallo por telefono de prueba invalido y entro correctamente por la rama `Undelivered`.
 - Pendiente para enriquecer recordatorios con dia, hora y link reales: configurar `CALENDLY_TOKEN` en Vercel para hidratar el evento Calendly desde el endpoint.
+
+## Confirmacion post agenda - 2026-05-25
+
+- Se agrego la pagina `/agenda/confirmacion/` para mostrar agradecimiento y proximos pasos cuando Calendly confirma la cita.
+- `/agenda/` ahora, al recibir `calendly.event_scheduled`, guarda un resumen no publico en `sessionStorage`, envia la cita a `/api/appointment.js` y redirige a `/agenda/confirmacion/`.
+- La pagina de confirmacion indica revisar email de Calendly, responder `CONFIRMO` por WhatsApp, asistir puntual con decisores y tener a mano datos comerciales del centro fitness.
+- La pagina dispara `PageView`, evento custom de Meta `GoodlyScheduleConfirmationView` y `dataLayer` `goodly_schedule_confirmation_view`.
