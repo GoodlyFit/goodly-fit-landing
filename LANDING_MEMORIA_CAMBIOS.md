@@ -226,3 +226,4 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - La landing principal ahora mide `goodly_vsl_play` y `goodly_cta_click` en `dataLayer`, mas eventos custom de Meta (`GoodlyVSLPlay` y `GoodlyCTAClick`).
 - Se incorporo captura de UTMs, `fbclid`, `_fbp`, `_fbc`, URL y referrer para que GTM/GA4, Meta y GHL puedan leer mejor la fuente de cada lead.
 - El endpoint incluye soporte opcional para Meta Conversions API si se configuran `META_CAPI_TOKEN`, `META_PIXEL_ID` y `META_GRAPH_API_VERSION` en Vercel.
+- En esta configuracion estatica de Vercel, el formulario publica al endpoint desplegado como `/api/lead.js`.
