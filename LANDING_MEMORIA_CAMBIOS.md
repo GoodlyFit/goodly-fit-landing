@@ -250,4 +250,7 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - Con confirmacion explicita del usuario, se agrego una accion `WhatsApp` free-form al workflow publicado: pide responder `CONFIRMO` y avisa que Nahuel se comunica a la brevedad.
 - Se agrego una rama `Undelivered` despues del WhatsApp: si el mensaje no se entrega, envia email interno a `nahuel.turano@goodlyfit.app` con datos del contacto, respuestas y cita para seguimiento manual.
 - El workflow `Goodly Fit - Cita agendada Calendly` quedo guardado y publicado en GHL.
+- Deploy Vercel verificado: `ArVf9b8aL`, commit `839b085`, estado `Ready Latest`.
+- Prueba live verificada contra `https://www.goodlyfit.app/api/appointment.js`: respuesta `crm.skipped:false`, `status:200`.
+- Logs de GHL verificados con contacto de prueba `Test Goodly Cita Final`: `Create Contact`, `Note`, `Add Tag` e `Internal Notification` ejecutaron; `WhatsApp` fallo por telefono de prueba invalido y entro correctamente por la rama `Undelivered`.
 - Pendiente para enriquecer recordatorios con dia, hora y link reales: configurar `CALENDLY_TOKEN` en Vercel para hidratar el evento Calendly desde el endpoint.
