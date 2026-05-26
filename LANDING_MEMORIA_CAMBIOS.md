@@ -261,3 +261,10 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - `/agenda/` ahora, al recibir `calendly.event_scheduled`, guarda un resumen no publico en `sessionStorage`, envia la cita a `/api/appointment.js` y redirige a `/agenda/confirmacion/`.
 - La pagina de confirmacion indica revisar email de Calendly, responder `CONFIRMO` por WhatsApp, asistir puntual con decisores y tener a mano datos comerciales del centro fitness.
 - La pagina dispara `PageView`, evento custom de Meta `GoodlyScheduleConfirmationView` y `dataLayer` `goodly_schedule_confirmation_view`.
+
+## Hero temporal sin VSL - 2026-05-26
+
+- Se retiro temporalmente el bloque VSL del hero de `index.html` y `goodlyfit-landing.html` para lanzar la landing antes de grabar el video definitivo.
+- El hero queda con logo, promesa principal, descripcion breve del programa, frase de aplicacion y CTA a `/agenda/`.
+- La descripcion breve quedo enfocada en sistema comercial: estrategia organica, publicidad, inteligencia artificial y CRM para aumentar ventas y seguir abriendo sedes.
+- El codigo original del VSL se guardo en `VSL_BACKUP_2026-05-26.md`; el CSS y JS del VSL quedaron en `index.html` para restaurarlo rapido cuando este grabado.

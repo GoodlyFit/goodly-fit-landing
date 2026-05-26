@@ -194,6 +194,11 @@
       background-repeat: no-repeat;
     }
 
+    .hero.hero-no-vsl {
+      min-height: min(760px, 84svh);
+      padding-bottom: 64px;
+    }
+
     .hero::before {
       content: "";
       position: absolute;
@@ -1381,7 +1386,7 @@
   <!-- End Google Tag Manager (noscript) -->
 
   <main class="page">
-    <section class="hero" id="headline">
+    <section class="hero hero-no-vsl" id="headline">
       <div class="container">
         <a class="hero-brand" href="#" aria-label="Goodly Fit">
           <img class="hero-logo" src="./assets/logos/logo-gf-cropped.png" alt="Goodly Fit" />
@@ -1393,29 +1398,9 @@
             <span>todos los días, sin depender de tu equipo.</span>
           </h1>
 
-          <div class="vsl-wrap reveal">
-            <div class="vsl-frame" data-video-frame>
-              <button class="vsl-cover" type="button" data-vsl-play aria-label="Reproducir video de Goodly Fit">
-                <img class="vsl-poster-img" src="./assets/ui/loom-preview.gif" alt="" aria-hidden="true" />
-                <span class="vsl-cover-content">
-                  <span class="vsl-play" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z"></path>
-                    </svg>
-                  </span>
-                  <span class="vsl-label">Ver video</span>
-                </span>
-              </button>
-              <a class="vsl-fallback" href="https://www.loom.com/share/59b82f786f6445b88f699f5e292e5dec" target="_blank" rel="noreferrer">
-                <span class="vsl-play" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M8 5v14l11-7z"></path>
-                  </svg>
-                </span>
-                <strong>Ver video</strong>
-              </a>
-            </div>
-          </div>
+          <p class="hero-copy reveal">
+            Goodly Fit instala un sistema comercial para centros fitness que combina estrategia orgánica, publicidad, inteligencia artificial y CRM para que aumentes las ventas de tu centro fitness y sigas abriendo sedes.
+          </p>
 
           <div class="hero-cta reveal">
             <p class="cta-note">Llená la aplicación y agenda tu llamada.</p>
