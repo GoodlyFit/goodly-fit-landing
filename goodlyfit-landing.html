@@ -330,7 +330,8 @@
         0 34px 100px rgba(0, 0, 0, 0.52);
     }
 
-    .vsl-frame iframe {
+    .vsl-frame iframe,
+    .vsl-frame video {
       position: absolute;
       inset: 0;
       width: 100%;
@@ -338,6 +339,9 @@
       border: 0;
       display: block;
       background: #020607;
+    }
+
+    .vsl-frame iframe {
       transform: scale(1.065);
       transform-origin: center;
     }
@@ -1234,7 +1238,8 @@
         border-radius: 16px;
       }
 
-      .vsl-frame iframe {
+      .vsl-frame iframe,
+      .vsl-frame video {
         display: block;
       }
 
@@ -1396,7 +1401,7 @@
           <div class="vsl-wrap reveal">
             <div class="vsl-frame" data-video-frame>
               <button class="vsl-cover" type="button" data-vsl-play aria-label="Reproducir video de Goodly Fit">
-                <img class="vsl-poster-img" src="./assets/ui/loom-preview.gif" alt="" aria-hidden="true" />
+                <img class="vsl-poster-img" src="./assets/posters/goodly-fit-vsl-poster.jpg" alt="" aria-hidden="true" />
                 <span class="vsl-cover-content">
                   <span class="vsl-play" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1612,7 +1617,7 @@
 
   <script>
     const calendarUrl = "https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano";
-    const loomEmbedUrl = "https://www.loom.com/embed/59b82f786f6445b88f699f5e292e5dec?autoplay=1&hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true&hide_speed=true&hide_watch_on_loom=true&raw_embed_video=true&minimal_player=true&disable_click_interactions=true";
+    const vslVideoUrl = "./assets/video/goodly-fit-vsl.mp4";
 
     const vslFrame = document.querySelector("[data-video-frame]");
     const vslPlay = document.querySelector("[data-vsl-play]");
@@ -1680,14 +1685,18 @@
           utm_campaign: tracking.utmCampaign
         }, eventId);
 
-        const iframe = document.createElement("iframe");
-        iframe.src = loomEmbedUrl;
-        iframe.title = "Goodly Fit VSL";
-        iframe.allow = "autoplay; fullscreen; picture-in-picture";
-        iframe.allowFullscreen = true;
+        const video = document.createElement("video");
+        video.src = vslVideoUrl;
+        video.controls = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.preload = "auto";
+        video.poster = "./assets/posters/goodly-fit-vsl-poster.jpg";
+        video.setAttribute("aria-label", "Goodly Fit VSL");
         vslPlay.remove();
         vslFrame.classList.add("is-playing");
-        vslFrame.appendChild(iframe);
+        vslFrame.appendChild(video);
+        video.play().catch(() => {});
       });
     }
 
