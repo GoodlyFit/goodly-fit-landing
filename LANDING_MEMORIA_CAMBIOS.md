@@ -268,3 +268,8 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 - El hero queda con logo, promesa principal, descripcion breve del programa, frase de aplicacion y CTA a `/agenda/`.
 - La descripcion breve quedo enfocada en sistema comercial: estrategia organica, publicidad, inteligencia artificial y CRM para aumentar ventas del centro fitness y seguir abriendo sedes.
 - El codigo original del VSL se guardo en `VSL_BACKUP_2026-05-26.md`; el CSS y JS del VSL quedaron en `index.html` para restaurarlo rapido cuando este grabado.
+
+## Restauracion VSL - 2026-06-02
+
+- Se restauro el bloque VSL original en el hero de `index.html` y `goodlyfit-landing.html`.
+- Se retiro la clase temporal `hero-no-vsl` para volver al layout anterior con video como pieza central.
