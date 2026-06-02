@@ -273,3 +273,10 @@ No se hizo commit ni push a GitHub/Vercel. Los cambios estan locales en `gymos-l
 
 - Se restauro el bloque VSL original en el hero de `index.html` y `goodlyfit-landing.html`.
 - Se retiro la clase temporal `hero-no-vsl` para volver al layout anterior con video como pieza central.
+
+## VSL nuevo desde Drive - 2026-06-02
+
+- Se descargo el VSL nuevo desde Google Drive (`vsl gooo.mp4`) y se optimizo para web.
+- El original de 466 MB se convirtio a `assets/video/goodly-fit-vsl.mp4` en 720p, H.264/AAC, con `faststart`, quedando en ~60 MB.
+- Se genero `assets/posters/goodly-fit-vsl-poster.jpg` como poster del reproductor.
+- El hero dejo de insertar el iframe viejo de Loom y ahora reproduce el MP4 local con `<video>` manteniendo el evento `goodly_vsl_play`.
