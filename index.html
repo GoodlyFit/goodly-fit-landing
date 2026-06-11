@@ -1169,15 +1169,8 @@
         font-size: 2.9rem;
       }
 
-      .problem-list,
       .solution-grid {
         grid-template-columns: repeat(2, 1fr);
-      }
-
-      .problem-card,
-      .problem-card:nth-child(4),
-      .problem-card:nth-child(5) {
-        grid-column: auto;
       }
 
       .plans-grid,
@@ -1335,6 +1328,12 @@
       .solution-grid,
       .plans-grid {
         grid-template-columns: 1fr;
+      }
+
+      .problem-card,
+      .problem-card:nth-child(4),
+      .problem-card:nth-child(5) {
+        grid-column: 1;
       }
 
       .solution-card.featured {
