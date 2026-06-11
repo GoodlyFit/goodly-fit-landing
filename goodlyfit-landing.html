@@ -580,8 +580,27 @@
     .problem-list,
     .solution-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
       gap: 16px;
+    }
+
+    .problem-list {
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .problem-card {
+      grid-column: span 2;
+    }
+
+    .problem-card:nth-child(4) {
+      grid-column: 2 / span 2;
+    }
+
+    .problem-card:nth-child(5) {
+      grid-column: 4 / span 2;
+    }
+
+    .solution-grid {
+      grid-template-columns: repeat(4, 1fr);
     }
 
     .problem-card,
@@ -1155,6 +1174,12 @@
         grid-template-columns: repeat(2, 1fr);
       }
 
+      .problem-card,
+      .problem-card:nth-child(4),
+      .problem-card:nth-child(5) {
+        grid-column: auto;
+      }
+
       .plans-grid,
       .split-header {
         grid-template-columns: 1fr;
@@ -1269,7 +1294,7 @@
       .vsl-play svg {
         width: 26px;
         height: 26px;
-        transform: translateX(2px);
+        transform: translateX(0);
       }
 
       .hero-cta {
@@ -1394,7 +1419,7 @@
 
         <div class="hero-inner">
           <h1 class="hero-title reveal">
-            <span>Sistema Comercial IA automático</span>
+            <span>Sistema Comercial IA</span>
             <span>que genera nuevos clientes 24/7</span>
           </h1>
 
