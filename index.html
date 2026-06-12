@@ -668,8 +668,7 @@
       border: 0;
     }
 
-    .problem-icon::before,
-    .solution-icon::before {
+    .problem-icon::before {
       content: "";
       display: block;
       width: 100px;
@@ -686,8 +685,18 @@
       background-image: url("./assets/ui/cross-red-3d-transparent.png");
     }
 
-    .solution-icon::before {
-      background-image: url("./assets/ui/check-green-3d-transparent.png");
+    .solution-icon {
+      width: 106px;
+      height: 106px;
+      margin-bottom: 22px;
+    }
+
+    .solution-icon img {
+      display: block;
+      width: 106px;
+      height: 106px;
+      object-fit: contain;
+      filter: drop-shadow(0 18px 30px rgba(33, 61, 243, 0.34));
     }
 
     .problem-card h3,
@@ -733,6 +742,7 @@
     }
 
     .solution-card {
+      justify-content: center;
       min-height: 272px;
       padding: 30px;
     }
@@ -1537,38 +1547,50 @@
 
         <div class="solution-grid">
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/1.png" alt="" />
+            </div>
             <h3>Radiografía comercial</h3>
             <p>Analizamos tu proceso actual y detectamos dónde estás perdiendo oportunidades.</p>
           </article>
 
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/2.png" alt="" />
+            </div>
             <h3>Publicidad a compradores reales</h3>
             <p>Creamos campañas enfocadas en personas con intención de compra en tu zona.</p>
           </article>
 
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/3.png" alt="" />
+            </div>
             <h3>Agente IA para WhatsApp</h3>
             <p>Respondemos consultas en segundos y hacemos seguimiento automático a cada prospecto.</p>
           </article>
 
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/4.png" alt="" />
+            </div>
             <h3>Recupero de socios perdidos</h3>
             <p>Activamos campañas para volver a contactar personas que se fueron del negocio.</p>
           </article>
 
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/5.png" alt="" />
+            </div>
             <h3>CRM comercial en tiempo real</h3>
             <p>Centralizamos leads, seguimientos, citas y ventas para que veas todo el proceso.</p>
           </article>
 
           <article class="solution-card reveal">
-            <div class="solution-icon" aria-hidden="true"></div>
-            <h3>Reportes mensuales claros</h3>
+            <div class="solution-icon" aria-hidden="true">
+              <img src="./assets/solution-icons/6.png" alt="" />
+            </div>
+            <h3>Reportes mensuales</h3>
             <p>Te mostramos qué funciona, qué corregir y dónde están las oportunidades de crecimiento.</p>
           </article>
         </div>
