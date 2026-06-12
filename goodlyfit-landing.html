@@ -621,9 +621,13 @@
 
     .problem-card,
     .solution-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       min-height: 248px;
       padding: 28px;
       border-radius: 8px;
+      text-align: center;
       transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
     }
 
@@ -652,9 +656,11 @@
 
     .problem-icon,
     .solution-icon {
+      position: relative;
+      z-index: 1;
       width: 86px;
       height: 86px;
-      margin-bottom: 26px;
+      margin: 0 auto 26px;
       border-radius: 0;
       background: transparent;
       display: grid;
@@ -1438,7 +1444,7 @@
           <div class="vsl-wrap reveal">
             <div class="vsl-frame" data-video-frame>
               <button class="vsl-cover" type="button" data-vsl-play aria-label="Reproducir video de Goodly Fit">
-                <img class="vsl-poster-img" src="./assets/posters/goodly-fit-vsl-poster.jpg" alt="" aria-hidden="true" />
+                <img class="vsl-poster-img" src="./assets/posters/goodly-fit-vsl-poster.jpg?v=vsl-preview-20260612" alt="" aria-hidden="true" />
                 <span class="vsl-cover-content">
                   <span class="vsl-play" aria-hidden="true">
                     <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1734,7 +1740,7 @@
         video.autoplay = true;
         video.playsInline = true;
         video.preload = "auto";
-        video.poster = "./assets/posters/goodly-fit-vsl-poster.jpg";
+        video.poster = "./assets/posters/goodly-fit-vsl-poster.jpg?v=vsl-preview-20260612";
         video.setAttribute("aria-label", "Goodly Fit VSL");
         vslPlay.remove();
         vslFrame.classList.add("is-playing");
