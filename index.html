@@ -1878,13 +1878,23 @@
       const link = event.target.closest("a[href]");
       if (!link) return;
 
-      const href = link.href || "";
+      let href = link.href || "";
       const label = (link.textContent || "").trim().replace(/\s+/g, " ").slice(0, 120);
 
-      const pathname = new URL(href, window.location.href).pathname.replace(/\/$/, "");
+      const destinationUrl = new URL(href, window.location.href);
+      const pathname = destinationUrl.pathname.replace(/\/$/, "");
       const isAgendaClick = href.includes(calendarUrl) || pathname === "/agenda";
 
       if (isAgendaClick) {
+        if (destinationUrl.origin === window.location.origin) {
+          const currentParams = new URLSearchParams(window.location.search);
+          currentParams.forEach((value, key) => {
+            if (!destinationUrl.searchParams.has(key)) destinationUrl.searchParams.set(key, value);
+          });
+          href = destinationUrl.href;
+          link.href = href;
+        }
+
         const tracking = getTrackingData();
         const eventId = makeEventId("gf_cta_click");
         pushDataLayer("goodly_cta_click", {
