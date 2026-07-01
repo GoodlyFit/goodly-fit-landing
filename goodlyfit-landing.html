@@ -1900,6 +1900,17 @@
               utm_medium: tracking.utmMedium,
               utm_campaign: tracking.utmCampaign
             }, progressEventId);
+            trackMetaStandard("ViewContent", {
+              content_name: `Goodly Fit VSL ${milestone}%`,
+              content_category: "VSL Progress",
+              event_action: "vsl_progress",
+              video_percent: milestone,
+              current_time: Math.round(video.currentTime),
+              duration: Math.round(video.duration),
+              utm_source: tracking.utmSource,
+              utm_medium: tracking.utmMedium,
+              utm_campaign: tracking.utmCampaign
+            }, progressEventId);
           });
         });
         video.play().catch(() => {});
@@ -1951,6 +1962,16 @@
           utm_medium: tracking.utmMedium,
           utm_campaign: tracking.utmCampaign
         }, eventId);
+        trackMetaStandard("ViewContent", {
+          content_name: "Goodly Fit agenda click",
+          content_category: "Agenda CTA",
+          event_action: "agenda_click",
+          cta_label: label || "Agendar ahora",
+          destination: href,
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign
+        }, `${eventId}_view`);
         trackMetaCustom("GoodlyAgendaClick", {
           content_name: "Goodly Fit agenda click",
           content_category: "Agenda CTA",
