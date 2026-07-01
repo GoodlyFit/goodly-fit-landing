@@ -1720,13 +1720,13 @@
       });
     }
 
-    function trackMetaCustom(eventName, payload = {}, eventId = "") {
+    function trackMetaStandard(eventName, payload = {}, eventId = "") {
       if (typeof fbq !== "function") return;
       if (eventId) {
-        fbq("trackCustom", eventName, payload, { eventID: eventId });
+        fbq("track", eventName, payload, { eventID: eventId });
         return;
       }
-      fbq("trackCustom", eventName, payload);
+      fbq("track", eventName, payload);
     }
 
     if (vslFrame && vslPlay) {
@@ -1737,8 +1737,10 @@
           event_id: eventId,
           tracking
         });
-        trackMetaCustom("GoodlyVSLPlay", {
+        trackMetaStandard("ViewContent", {
           content_name: "Goodly Fit VSL",
+          content_category: "VSL",
+          event_action: "vsl_play",
           utm_source: tracking.utmSource,
           utm_medium: tracking.utmMedium,
           utm_campaign: tracking.utmCampaign
@@ -1778,13 +1780,31 @@
           destination: href,
           tracking
         });
-        trackMetaCustom("GoodlyCTAClick", {
+        trackMetaStandard("Contact", {
+          content_name: "Goodly Fit agenda click",
+          content_category: "Agenda CTA",
+          event_action: "agenda_click",
           cta_label: label || "Agendar ahora",
           destination: href,
           utm_source: tracking.utmSource,
           utm_medium: tracking.utmMedium,
           utm_campaign: tracking.utmCampaign
         }, eventId);
+
+        const shouldDelayNavigation =
+          event.button === 0 &&
+          !event.metaKey &&
+          !event.ctrlKey &&
+          !event.shiftKey &&
+          !event.altKey &&
+          link.target !== "_blank";
+
+        if (shouldDelayNavigation) {
+          event.preventDefault();
+          window.setTimeout(() => {
+            window.location.href = href;
+          }, 250);
+        }
       }
 
     }, true);
