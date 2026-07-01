@@ -31,6 +31,53 @@ function normalize(value) {
   return String(value || "").trim();
 }
 
+function getEngagementEvents(landingEngagement) {
+  return Array.isArray(landingEngagement?.events) ? landingEngagement.events.slice(-80) : [];
+}
+
+function getPercentFromType(type) {
+  const match = String(type || "").match(/^vsl_(\d{1,3})$/);
+  return match ? Number(match[1]) : 0;
+}
+
+function summarizeLandingEngagement(landingEngagement) {
+  const events = getEngagementEvents(landingEngagement);
+
+  return events.reduce((summary, item) => {
+    const type = item.type || "";
+    const percent = Number(item.videoPercent || item.percent || getPercentFromType(type));
+
+    if (type === "vsl_play") summary.vslPlayed = true;
+    if (Number.isFinite(percent)) {
+      summary.maxVideoPercent = Math.max(summary.maxVideoPercent, Math.round(percent));
+    }
+    if (type === "agenda_click") {
+      summary.agendaClicked = true;
+      summary.agendaClickCount += 1;
+      summary.lastAgendaClickAt = item.at || summary.lastAgendaClickAt;
+    }
+    summary.lastEventAt = item.at || summary.lastEventAt;
+    summary.eventsCount += 1;
+    return summary;
+  }, {
+    vslPlayed: false,
+    maxVideoPercent: 0,
+    agendaClicked: false,
+    agendaClickCount: 0,
+    lastAgendaClickAt: "",
+    lastEventAt: "",
+    eventsCount: 0
+  });
+}
+
+function jsonString(value, maxLength = 7500) {
+  try {
+    return JSON.stringify(value).slice(0, maxLength);
+  } catch (error) {
+    return "";
+  }
+}
+
 async function fetchCalendlyResource(uri) {
   const token = process.env.CALENDLY_TOKEN;
   if (!token || !uri) return null;
@@ -110,6 +157,9 @@ module.exports = async function handler(req, res) {
     const body = await readJson(req);
     const application = body.application || {};
     const tracking = body.tracking || {};
+    const landingEngagement = body.landingEngagement || tracking.landingEngagement || {};
+    const landingEngagementSummary = summarizeLandingEngagement(landingEngagement);
+    const landingEngagementEvents = getEngagementEvents(landingEngagement);
     const calendly = body.calendly || {};
     const eventId = normalize(body.eventId) || crypto.randomUUID();
     const eventUri = calendly.event?.uri || calendly.eventUri || "";
@@ -172,6 +222,18 @@ module.exports = async function handler(req, res) {
       fbclid: tracking.fbclid || "",
       fbp: tracking.fbp || "",
       fbc: tracking.fbc || "",
+      landingSessionId: normalize(landingEngagement.sessionId),
+      landingEngagementStartedAt: landingEngagement.startedAt || "",
+      landingEngagementUpdatedAt: landingEngagement.updatedAt || landingEngagementSummary.lastEventAt || "",
+      vslPlayed: landingEngagementSummary.vslPlayed,
+      vslMaxPercent: landingEngagementSummary.maxVideoPercent,
+      agendaClicked: landingEngagementSummary.agendaClicked,
+      agendaClickCount: landingEngagementSummary.agendaClickCount,
+      lastAgendaClickAt: landingEngagementSummary.lastAgendaClickAt,
+      landingEngagementEventsCount: landingEngagementSummary.eventsCount,
+      landingEngagementEventsJson: jsonString(landingEngagementEvents),
+      landingEngagementSummary,
+      landingEngagement,
       application,
       appointment,
       calendly,

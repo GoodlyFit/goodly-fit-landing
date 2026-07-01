@@ -51,6 +51,53 @@ function splitName(name) {
   };
 }
 
+function getEngagementEvents(landingEngagement) {
+  return Array.isArray(landingEngagement?.events) ? landingEngagement.events.slice(-80) : [];
+}
+
+function getPercentFromType(type) {
+  const match = String(type || "").match(/^vsl_(\d{1,3})$/);
+  return match ? Number(match[1]) : 0;
+}
+
+function summarizeLandingEngagement(landingEngagement) {
+  const events = getEngagementEvents(landingEngagement);
+
+  return events.reduce((summary, item) => {
+    const type = item.type || "";
+    const percent = Number(item.videoPercent || item.percent || getPercentFromType(type));
+
+    if (type === "vsl_play") summary.vslPlayed = true;
+    if (Number.isFinite(percent)) {
+      summary.maxVideoPercent = Math.max(summary.maxVideoPercent, Math.round(percent));
+    }
+    if (type === "agenda_click") {
+      summary.agendaClicked = true;
+      summary.agendaClickCount += 1;
+      summary.lastAgendaClickAt = item.at || summary.lastAgendaClickAt;
+    }
+    summary.lastEventAt = item.at || summary.lastEventAt;
+    summary.eventsCount += 1;
+    return summary;
+  }, {
+    vslPlayed: false,
+    maxVideoPercent: 0,
+    agendaClicked: false,
+    agendaClickCount: 0,
+    lastAgendaClickAt: "",
+    lastEventAt: "",
+    eventsCount: 0
+  });
+}
+
+function jsonString(value, maxLength = 7500) {
+  try {
+    return JSON.stringify(value).slice(0, maxLength);
+  } catch (error) {
+    return "";
+  }
+}
+
 function pickFirstHeader(header) {
   if (Array.isArray(header)) return header[0] || "";
   return String(header || "").split(",")[0].trim();
@@ -72,7 +119,7 @@ async function postToGhl(payload) {
   return { ok: response.ok, skipped: false, status: response.status, text };
 }
 
-async function postToMeta({ application, tracking, eventId, req }) {
+async function postToMeta({ application, tracking, eventId, req, landingEngagementSummary }) {
   const accessToken = process.env.META_CAPI_TOKEN;
   const pixelId = process.env.META_PIXEL_ID || DEFAULT_PIXEL_ID;
   const graphVersion = process.env.META_GRAPH_API_VERSION || DEFAULT_META_VERSION;
@@ -111,7 +158,11 @@ async function postToMeta({ application, tracking, eventId, req }) {
             content_category: "Core Gold commercial diagnosis",
             business_role: application.businessRole || "",
             active_clients: application.activeClients || "",
-            commercial_system: application.commercialSystem || ""
+            commercial_system: application.commercialSystem || "",
+            vsl_played: landingEngagementSummary.vslPlayed ? 1 : 0,
+            vsl_max_percent: landingEngagementSummary.maxVideoPercent || 0,
+            agenda_clicked: landingEngagementSummary.agendaClicked ? 1 : 0,
+            agenda_click_count: landingEngagementSummary.agendaClickCount || 0
           }
         }
       ]
@@ -139,6 +190,9 @@ module.exports = async function handler(req, res) {
     const body = await readJson(req);
     const application = body.application || {};
     const tracking = body.tracking || {};
+    const landingEngagement = body.landingEngagement || tracking.landingEngagement || {};
+    const landingEngagementSummary = summarizeLandingEngagement(landingEngagement);
+    const landingEngagementEvents = getEngagementEvents(landingEngagement);
     const eventId = normalize(body.eventId) || crypto.randomUUID();
     const { firstName, lastName } = splitName(application.name);
 
@@ -174,6 +228,18 @@ module.exports = async function handler(req, res) {
       fbclid: tracking.fbclid || "",
       fbp: tracking.fbp || "",
       fbc: tracking.fbc || "",
+      landingSessionId: normalize(landingEngagement.sessionId),
+      landingEngagementStartedAt: landingEngagement.startedAt || "",
+      landingEngagementUpdatedAt: landingEngagement.updatedAt || landingEngagementSummary.lastEventAt || "",
+      vslPlayed: landingEngagementSummary.vslPlayed,
+      vslMaxPercent: landingEngagementSummary.maxVideoPercent,
+      agendaClicked: landingEngagementSummary.agendaClicked,
+      agendaClickCount: landingEngagementSummary.agendaClickCount,
+      lastAgendaClickAt: landingEngagementSummary.lastAgendaClickAt,
+      landingEngagementEventsCount: landingEngagementSummary.eventsCount,
+      landingEngagementEventsJson: jsonString(landingEngagementEvents),
+      landingEngagementSummary,
+      landingEngagement,
       application,
       tracking,
       tags: ["Goodly Fit Landing", "Aplicacion completada"]
@@ -181,7 +247,7 @@ module.exports = async function handler(req, res) {
 
     const [ghlResult, metaResult] = await Promise.all([
       postToGhl(crmPayload),
-      postToMeta({ application, tracking, eventId, req })
+      postToMeta({ application, tracking, eventId, req, landingEngagementSummary })
     ]);
 
     const ok = ghlResult.ok && metaResult.ok;

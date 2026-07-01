@@ -1046,7 +1046,7 @@
                 <span>Completá las preguntas para desbloquear opciones de días y horarios.</span>
               </div>
             </div>
-            <div class="calendly-inline-widget" id="calendlyWidget" hidden></div>
+            <div id="calendlyWidget" hidden></div>
           </div>
         </div>
       </section>
@@ -1135,6 +1135,18 @@
       });
     }
 
+    const landingEngagementStorageKey = "goodly_landing_engagement_v1";
+
+    function getLandingEngagement() {
+      try {
+        const engagement = JSON.parse(window.localStorage.getItem(landingEngagementStorageKey) || "{}") || {};
+        if (!Array.isArray(engagement.events)) engagement.events = [];
+        return engagement;
+      } catch (error) {
+        return { events: [] };
+      }
+    }
+
     function trackMetaCustom(eventName, payload = {}) {
       if (typeof fbq !== "function") return;
       fbq("trackCustom", eventName, payload);
@@ -1156,11 +1168,13 @@
     }
 
     function submitApplication(application, eventId, tracking) {
+      const landingEngagement = getLandingEngagement();
       const payload = {
         event: "goodly_application_completed",
         eventId,
         application,
-        tracking
+        tracking,
+        landingEngagement
       };
 
       return fetch("/api/lead.js", {
@@ -1177,12 +1191,14 @@
     }
 
     function submitScheduledCall(application, calendly, eventId, tracking) {
+      const landingEngagement = getLandingEngagement();
       const payload = {
         event: "goodly_call_scheduled",
         eventId,
         application,
         calendly,
-        tracking
+        tracking,
+        landingEngagement
       };
 
       return fetch("/api/appointment.js", {
@@ -1372,6 +1388,8 @@
       completedApplicationData = application;
       applicationCard.classList.add("is-calendar-mode");
       calendarPanel.classList.add("is-ready");
+      calendlyWidget.dataset.url = calendlyUrl;
+      calendlyWidget.classList.add("calendly-inline-widget");
       calendlyWidget.hidden = false;
       calendlyWidget.style.display = "block";
       stepLabel.textContent = "Aplicación completa";
@@ -1383,7 +1401,8 @@
         pushDataLayer("goodly_application_completed", {
           event_id: eventId,
           application,
-          tracking
+          tracking,
+          landing_engagement: getLandingEngagement().summary || {}
         });
         pushDataLayer("goodly_calendar_opened", {
           event_id: makeEventId("gf_calendar_opened"),
@@ -1536,7 +1555,8 @@
         pushDataLayer("calendly_event_scheduled", {
           event_id: scheduleEventId,
           calendly: calendlyPayload,
-          tracking
+          tracking,
+          landing_engagement: getLandingEngagement().summary || {}
         });
 
         storeAppointmentConfirmation(application, calendlyPayload, scheduleEventId);
