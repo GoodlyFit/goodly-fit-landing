@@ -1712,6 +1712,84 @@
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
 
+    const engagementStorageKey = "goodly_landing_engagement_v1";
+    const engagementEventLimit = 80;
+
+    function summarizeEngagement(events) {
+      return events.reduce((summary, item) => {
+        const type = item.type || "";
+        const percent = Number(item.videoPercent || item.percent || 0);
+
+        if (type === "vsl_play") summary.vslPlayed = true;
+        if (Number.isFinite(percent)) {
+          summary.maxVideoPercent = Math.max(summary.maxVideoPercent, Math.round(percent));
+        }
+        if (type === "agenda_click") {
+          summary.agendaClicked = true;
+          summary.agendaClickCount += 1;
+          summary.lastAgendaClickAt = item.at || summary.lastAgendaClickAt;
+        }
+        summary.lastEventAt = item.at || summary.lastEventAt;
+        summary.eventsCount += 1;
+        return summary;
+      }, {
+        vslPlayed: false,
+        maxVideoPercent: 0,
+        agendaClicked: false,
+        agendaClickCount: 0,
+        lastAgendaClickAt: "",
+        lastEventAt: "",
+        eventsCount: 0
+      });
+    }
+
+    function getLandingEngagement() {
+      let stored = {};
+
+      try {
+        stored = JSON.parse(window.localStorage.getItem(engagementStorageKey) || "{}") || {};
+      } catch (error) {
+        stored = {};
+      }
+
+      const now = new Date().toISOString();
+      const events = Array.isArray(stored.events) ? stored.events : [];
+      return {
+        sessionId: stored.sessionId || makeEventId("gf_session"),
+        startedAt: stored.startedAt || now,
+        updatedAt: stored.updatedAt || now,
+        summary: stored.summary || summarizeEngagement(events),
+        events
+      };
+    }
+
+    function saveLandingEngagement(engagement) {
+      try {
+        window.localStorage.setItem(engagementStorageKey, JSON.stringify(engagement));
+      } catch (error) {}
+    }
+
+    function recordLandingEngagement(type, payload = {}) {
+      const engagement = getLandingEngagement();
+      const eventRecord = {
+        type,
+        at: new Date().toISOString(),
+        path: window.location.pathname,
+        pageUrl: window.location.href,
+        ...payload
+      };
+      const events = engagement.events.concat(eventRecord).slice(-engagementEventLimit);
+      const updatedEngagement = {
+        ...engagement,
+        updatedAt: eventRecord.at,
+        summary: summarizeEngagement(events),
+        events
+      };
+
+      saveLandingEngagement(updatedEngagement);
+      return eventRecord;
+    }
+
     function pushDataLayer(eventName, payload = {}) {
       if (!window.dataLayer) return;
       window.dataLayer.push({
@@ -1737,6 +1815,10 @@
           event_id: eventId,
           tracking
         });
+        recordLandingEngagement("vsl_play", {
+          eventId,
+          tracking
+        });
         trackMetaStandard("ViewContent", {
           content_name: "Goodly Fit VSL",
           content_category: "VSL",
@@ -1757,6 +1839,37 @@
         vslPlay.remove();
         vslFrame.classList.add("is-playing");
         vslFrame.appendChild(video);
+        const milestones = [25, 50, 75, 90, 100];
+        const reachedMilestones = new Set();
+
+        video.addEventListener("timeupdate", () => {
+          if (!video.duration || !Number.isFinite(video.duration)) return;
+          const percentWatched = Math.min(100, Math.round((video.currentTime / video.duration) * 100));
+
+          milestones.forEach((milestone) => {
+            if (reachedMilestones.has(milestone) || percentWatched < milestone) return;
+            reachedMilestones.add(milestone);
+            const progressEventId = makeEventId(`gf_vsl_${milestone}`);
+            const progressPayload = {
+              event_id: progressEventId,
+              source_event_id: eventId,
+              video_percent: milestone,
+              current_time: Math.round(video.currentTime),
+              duration: Math.round(video.duration),
+              tracking
+            };
+
+            pushDataLayer(`goodly_vsl_${milestone}`, progressPayload);
+            recordLandingEngagement(`vsl_${milestone}`, {
+              eventId: progressEventId,
+              sourceEventId: eventId,
+              videoPercent: milestone,
+              currentTime: Math.round(video.currentTime),
+              duration: Math.round(video.duration),
+              tracking
+            });
+          });
+        });
         video.play().catch(() => {});
       });
     }
@@ -1777,6 +1890,12 @@
         pushDataLayer("goodly_cta_click", {
           event_id: eventId,
           cta_label: label || "Agendar ahora",
+          destination: href,
+          tracking
+        });
+        recordLandingEngagement("agenda_click", {
+          eventId,
+          ctaLabel: label || "Agendar ahora",
           destination: href,
           tracking
         });
