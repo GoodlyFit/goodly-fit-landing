@@ -1676,6 +1676,7 @@
 
   <script>
     const calendarUrl = "https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano";
+    const metaPixelId = "1280984843510755";
     const vslVideoUrl = "./assets/video/goodly-fit-vsl.mp4";
 
     const vslFrame = document.querySelector("[data-video-frame]");
@@ -1801,10 +1802,10 @@
     function trackMetaStandard(eventName, payload = {}, eventId = "") {
       if (typeof fbq !== "function") return;
       if (eventId) {
-        fbq("track", eventName, payload, { eventID: eventId });
+        fbq("trackSingle", metaPixelId, eventName, payload, { eventID: eventId });
         return;
       }
-      fbq("track", eventName, payload);
+      fbq("trackSingle", metaPixelId, eventName, payload);
     }
 
     if (vslFrame && vslPlay) {
