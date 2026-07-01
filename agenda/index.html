@@ -1152,6 +1152,15 @@
       fbq("trackCustom", eventName, payload);
     }
 
+    function trackMetaStandard(eventName, payload = {}, eventId = "") {
+      if (typeof fbq !== "function") return;
+      if (eventId) {
+        fbq("track", eventName, payload, { eventID: eventId });
+        return;
+      }
+      fbq("track", eventName, payload);
+    }
+
     function trackMetaLead(application, tracking, eventId) {
       if (typeof fbq !== "function") return;
       fbq("track", "Lead", {
@@ -1166,6 +1175,25 @@
         eventID: eventId
       });
     }
+
+    function trackAgendaPageView() {
+      const tracking = getTrackingData();
+      const eventId = makeEventId("gf_agenda_page");
+      pushDataLayer("goodly_agenda_page_view", {
+        event_id: eventId,
+        tracking
+      });
+      trackMetaStandard("ViewContent", {
+        content_name: "Goodly Fit agenda page",
+        content_category: "Agenda",
+        event_action: "agenda_page_view",
+        utm_source: tracking.utmSource,
+        utm_medium: tracking.utmMedium,
+        utm_campaign: tracking.utmCampaign
+      }, eventId);
+    }
+
+    trackAgendaPageView();
 
     function submitApplication(application, eventId, tracking) {
       const landingEngagement = getLandingEngagement();
