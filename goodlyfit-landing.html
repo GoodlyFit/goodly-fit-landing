@@ -1811,7 +1811,10 @@
     function trackMetaCustom(eventName, payload = {}, eventId = "") {
       if (typeof fbq !== "function") return;
       if (eventId) {
-        fbq("trackCustom", eventName, payload, { eventID: eventId });
+        fbq("trackCustom", eventName, {
+          event_id: eventId,
+          ...payload
+        });
         return;
       }
       fbq("trackCustom", eventName, payload);
