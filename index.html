@@ -1802,10 +1802,19 @@
     function trackMetaStandard(eventName, payload = {}, eventId = "") {
       if (typeof fbq !== "function") return;
       if (eventId) {
-        fbq("trackSingle", metaPixelId, eventName, payload, { eventID: eventId });
+        fbq("track", eventName, payload, { eventID: eventId });
         return;
       }
-      fbq("trackSingle", metaPixelId, eventName, payload);
+      fbq("track", eventName, payload);
+    }
+
+    function trackMetaCustom(eventName, payload = {}, eventId = "") {
+      if (typeof fbq !== "function") return;
+      if (eventId) {
+        fbq("trackCustom", eventName, payload, { eventID: eventId });
+        return;
+      }
+      fbq("trackCustom", eventName, payload);
     }
 
     if (vslFrame && vslPlay) {
@@ -1820,6 +1829,14 @@
           eventId,
           tracking
         });
+        trackMetaCustom("GoodlyVslPlay", {
+          content_name: "Goodly Fit VSL",
+          content_category: "VSL",
+          event_action: "vsl_play",
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign
+        }, `${eventId}_custom`);
         trackMetaStandard("ViewContent", {
           content_name: "Goodly Fit VSL",
           content_category: "VSL",
@@ -1869,6 +1886,17 @@
               duration: Math.round(video.duration),
               tracking
             });
+            trackMetaCustom(`GoodlyVsl${milestone}`, {
+              content_name: "Goodly Fit VSL",
+              content_category: "VSL",
+              event_action: "vsl_progress",
+              video_percent: milestone,
+              current_time: Math.round(video.currentTime),
+              duration: Math.round(video.duration),
+              utm_source: tracking.utmSource,
+              utm_medium: tracking.utmMedium,
+              utm_campaign: tracking.utmCampaign
+            }, progressEventId);
           });
         });
         video.play().catch(() => {});
@@ -1920,6 +1948,16 @@
           utm_medium: tracking.utmMedium,
           utm_campaign: tracking.utmCampaign
         }, eventId);
+        trackMetaCustom("GoodlyAgendaClick", {
+          content_name: "Goodly Fit agenda click",
+          content_category: "Agenda CTA",
+          event_action: "agenda_click",
+          cta_label: label || "Agendar ahora",
+          destination: href,
+          utm_source: tracking.utmSource,
+          utm_medium: tracking.utmMedium,
+          utm_campaign: tracking.utmCampaign
+        }, `${eventId}_custom`);
 
         const shouldDelayNavigation =
           event.button === 0 &&
