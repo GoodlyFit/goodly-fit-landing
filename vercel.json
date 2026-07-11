@@ -11,7 +11,6 @@
     { "src": "agenda/**/*", "use": "@vercel/static" },
     { "src": "politicas/**/*", "use": "@vercel/static" },
     { "src": "terminos/**/*", "use": "@vercel/static" },
-    { "src": "icono/**/*", "use": "@vercel/static" },
     { "src": "goodlyfit-landing.html", "use": "@vercel/static" },
     { "src": "assets/**/*", "use": "@vercel/static" },
     { "src": "public/**/*", "use": "@vercel/static" }
