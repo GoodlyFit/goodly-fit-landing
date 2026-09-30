@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Goodly Fit · Mercado Fitness 2026</title>
+<meta name="description" content="Dejanos tus datos y recibí la propuesta de Goodly Fit para tu gimnasio.">
+<meta name="theme-color" content="#213DF3">
+<link rel="icon" type="image/png" href="/assets/logos/logo-goodly-fit-favicon.png?v=20260524">
+<link rel="apple-touch-icon" href="/assets/logos/logo-goodly-fit-favicon.png?v=20260524">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light;
+    --bg:#FFFFFF; --card:#F5F6F8; --line:#E6E8EE;
+    --ink:#0C1618; --ink-2:#2B3336; --muted:#6B7480; --faint:#B9BEC8;
+    --blue:#213DF3; --blue-2:#4A63FF; --blue-soft:#E8ECFF;
+    --error:#D92D20;
+    --font:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+    --ease:cubic-bezier(.2,.7,.1,1);
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink)}
+  body{font-family:var(--font);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;min-height:100vh;position:relative;overflow-x:hidden}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+    background-size:56px 56px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 55% at 50% 12%,#000 20%,transparent 75%);
+            mask-image:radial-gradient(ellipse 80% 55% at 50% 12%,#000 20%,transparent 75%);opacity:.7}
+  body::after{content:"";position:fixed;left:50%;top:10%;width:900px;height:520px;transform:translate(-50%,-50%);pointer-events:none;
+    background:radial-gradient(closest-side,rgba(33,61,243,.14),transparent)}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--blue);color:#fff}
+  :focus-visible{outline:2px solid var(--blue);outline-offset:3px;border-radius:8px}
+
+  .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:28px 16px 40px}
+  header{display:flex;justify-content:center;margin-bottom:34px}
+  .logo{height:26px;width:auto;color:var(--ink);display:block}
+  h1{font-weight:500;font-size:clamp(30px,8vw,40px);line-height:1.08;letter-spacing:-.03em;margin:0 0 26px;text-align:center;text-wrap:balance}
+  h1 .b{color:var(--blue)}
+
+  form{background:#fff;border:1px solid var(--line);border-radius:28px;padding:24px 18px;box-shadow:0 30px 70px -45px rgba(12,22,24,.35)}
+  .field{margin-bottom:14px}
+  label{display:block;font-size:13.5px;font-weight:500;color:var(--ink-2);margin-bottom:6px}
+  label .opt{color:var(--muted);font-weight:400}
+  input[type=text],input[type=email],input[type=tel],select{
+    width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--card);
+    border:1.5px solid transparent;border-radius:14px;padding:13px 14px;outline:none;appearance:none;-webkit-appearance:none;
+    transition:border-color .2s,background .2s,box-shadow .2s}
+  select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
+    background-position:calc(100% - 20px) 52%,calc(100% - 15px) 52%;background-size:5px 5px;background-repeat:no-repeat;padding-right:36px}
+  select:invalid{color:var(--muted)}
+  input::placeholder{color:var(--faint)}
+  input:focus,select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px var(--blue-soft)}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  @media (max-width:380px){.row{grid-template-columns:1fr}}
+  .err{display:none;color:var(--error);font-size:12px;margin-top:5px}
+  .invalid input,.invalid select{border-color:var(--error)}
+  .invalid .err{display:block}
+
+  .btn{display:flex;width:100%;align-items:center;justify-content:space-between;gap:14px;padding:8px 8px 8px 24px;margin-top:8px;
+    border-radius:999px;background:var(--blue);color:#fff;font:inherit;font-weight:500;font-size:16px;border:0;cursor:pointer;
+    position:relative;overflow:hidden;isolation:isolate}
+  .btn .ar{width:44px;height:44px;border-radius:50%;background:#fff;color:var(--blue);display:grid;place-items:center;flex:none;transition:transform .45s var(--ease)}
+  .btn .ar svg{width:18px;height:18px}
+  .btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ink);transform:translateY(101%);transition:transform .5s var(--ease)}
+  .btn:hover::before{transform:none}
+  .btn:hover .ar{transform:translateX(3px) rotate(-45deg)}
+  .btn[disabled]{opacity:.7;cursor:wait}
+  .legal{font-size:11.5px;color:var(--muted);text-align:center;margin:12px 0 0;line-height:1.5}
+
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}
+  .lk{display:flex;align-items:center;justify-content:center;gap:8px;padding:13px 12px;border-radius:999px;border:1.5px solid #D4D8E0;background:rgba(255,255,255,.8);
+    font-size:14.5px;font-weight:500;transition:border-color .2s,color .2s}
+  .lk:hover{border-color:var(--blue);color:var(--blue)}
+  .lk svg{width:18px;height:18px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="arr" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="web" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></g></symbol>
+  <symbol id="ig" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none"/></g></symbol>
+</svg>
+
+<div class="wrap">
+  <header><a href="https://goodlyfit.app" aria-label="Goodly Fit"><svg class="logo" viewBox="238.7 271.6 1438.5 250.9" role="img" aria-label="Goodly Fit"><path fill="currentColor" d="M 465.7 407.2 L 465.7 407.2 C 465.6 406 465.6 404.7 465.5 403.5 C 464.6 395.1 462.5 386.6 459.2 378.4 C 453.0 363.1 443.2 350.4 431.2 340.8 C 414.9 327.9 394.5 320.7 373.6 320.8 C 365.0 320.8 356.3 322.1 347.8 324.6 C 318.4 334.1 297.2 360.0 297.2 390.5 C 297.2 405.8 302.6 419.9 311.6 431.4 C 313.8 434.2 316.2 436.8 318.8 439.2 C 323.1 443.3 327.9 446.9 333.2 449.9 C 338.1 452.7 343.4 455.0 349.0 456.7 C 350.7 457.2 352.5 457.7 354.3 458.1 L 354.3 466.1 L 398.3 441.4 L 354.3 416.6 L 354.3 424.5 C 351.5 423.4 338.8 417.9 333.0 403.6 C 326.3 386.8 334.7 372.0 335.7 370.3 C 336.4 369.1 338.5 365.9 341.5 363.2 C 341.5 363.2 343.6 361.3 346.1 359.6 C 346.6 359.3 347.1 359.0 347.1 359.0 C 347.5 358.7 348.0 358.5 348.5 358.2 C 348.6 358.1 348.8 358.1 348.9 358.0 L 348.9 358.0 C 351.0 356.8 353.2 355.7 355.5 354.8 C 362.1 352.1 368.9 350.9 375.6 350.9 C 380.8 351.0 385.9 351.8 390.8 353.2 C 407.0 358.1 421.1 370.3 428.1 387.7 C 430.7 394.2 432.1 400.8 432.4 407.4 C 432.5 407.9 432.5 408.4 432.6 409.0 C 433.0 413.8 435.3 452.4 387.3 468.8 C 358.0 478.8 334.1 470.7 317.5 460.2 C 303.6 451.0 295.2 440.4 293.6 438.3 L 293.2 437.6 C 283.5 423.9 277.8 407.2 277.8 389.1 C 277.8 357.0 295.8 329.1 322.2 314.8 C 324.0 313.9 325.9 313.1 327.8 312.3 C 329.5 311.7 331.2 311.1 332.9 310.5 C 333.8 310.2 334.7 310.0 335.6 309.7 C 335.6 309.7 335.6 309.7 335.6 309.7 C 340.3 308.1 345.2 307.0 350.3 306.2 C 351.6 306.0 353.0 305.8 354.4 305.6 C 354.5 305.6 354.6 305.6 354.7 305.6 L 354.7 303.5 L 354.7 303.5 L 354.7 271.6 L 354.6 271.6 L 354.6 271.6 C 341.1 272.3 328.2 275.3 316.3 280.2 C 316.2 280.2 316.1 280.2 316.0 280.3 C 315.1 280.6 314.4 281 313.6 281.3 C 313.5 281.3 313.5 281.3 313.5 281.3 C 289.6 292.0 269.8 310.3 257.4 333.1 C 257.3 333.2 257.3 333.3 257.3 333.3 C 256.7 334.5 256.1 335.6 255.5 336.7 C 255.4 336.9 255.3 337.1 255.3 337.3 C 254.7 338.3 254.2 339.3 253.8 340.4 C 253.6 340.7 253.5 341.0 253.4 341.3 C 253 342.2 252.5 343.1 252.2 344.1 C 252.0 344.5 251.8 345.0 251.6 345.4 C 251.3 346.2 251.0 347.0 250.7 347.8 C 250.4 348.4 250.2 349.1 250.0 349.7 C 249.8 350.3 249.5 350.9 249.3 351.5 C 249.0 352.4 248.7 353.4 248.4 354.3 C 248.3 354.6 248.2 354.9 248.1 355.2 C 238.6 386.4 241.9 421.3 260.2 451.3 C 273.6 473.2 293.0 489.2 315.0 498.5 C 315.2 498.6 315.5 498.7 315.7 498.8 C 315.8 498.8 316.0 498.9 316.1 498.9 L 323.0 501.2 C 323.8 501.4 324.5 501.6 325.3 501.9 C 387.8 522.5 434.4 482 434.4 482 C 467.8 455.6 465.8 409.3 465.7 407.2 Z M 465.7 407.2  M 623.9 384.7 L 688.5 384.7 L 688.5 386.4 C 688.5 395.9 687.2 425.5 667.8 444.7 C 653.2 459.3 635.3 463.3 617.7 463.3 C 600.2 463.3 582.0 459.7 566.6 444.3 C 561.8 439.4 545.7 421.6 545.7 390.0 C 545.7 362.7 558.0 346.0 566.4 337.6 C 577.0 326.8 594.7 316.0 622.0 316.0 C 632.5 316.0 643.7 317.7 654.5 323.4 C 663.6 328.1 673.5 336.5 680.9 349.2 L 657.0 362.1 C 652.1 352.6 645.0 347.7 640.5 345.4 C 634.6 342.4 627.2 340.9 620.7 340.9 C 609.5 340.9 596.8 345.0 588.2 353.4 C 580.1 361.2 574.0 374.7 574.0 390.6 C 574.0 409.4 582.0 420.6 588.0 426.3 C 594.3 432.4 604.2 438.3 619.2 438.3 C 628.5 438.3 639.1 435.8 646.9 429.9 C 652.4 425.6 657.9 418.5 660.2 408.3 L 623.9 408.3 Z M 623.9 384.7  M 857.4 389.8 C 857.4 432.6 826.6 463.3 782.3 463.3 C 737.9 463.3 707.1 432.7 707.1 389.8 C 707.1 346.9 737.9 316.0 782.3 316.0 C 826.6 316.0 857.4 346.9 857.4 389.8 Z M 829.1 389.8 C 829.1 361.3 809.7 341.0 782.2 341.0 C 754.8 341.0 735.4 361.2 735.4 389.8 C 735.4 418.3 754.8 438.4 782.2 438.4 C 809.7 438.4 829.1 418.3 829.1 389.8 Z M 829.1 389.8  M 1026.4 389.8 C 1026.4 432.6 995.6 463.3 951.2 463.3 C 906.9 463.3 876.0 432.7 876.0 389.8 C 876.0 346.9 906.9 316.0 951.2 316.0 C 995.6 316.0 1026.4 346.9 1026.4 389.8 Z M 998.1 389.8 C 998.1 361.3 978.7 341.0 951.2 341.0 C 923.8 341.0 904.3 361.2 904.3 389.8 C 904.3 418.3 923.8 438.4 951.2 438.4 C 978.7 438.3 998.1 418.3 998.1 389.8 Z M 998.1 389.8  M 1088.5 319.2 C 1108.1 319.2 1125.2 321.3 1140.9 332.9 C 1158.0 345.8 1167.9 366.3 1167.9 389.7 C 1167.9 413.2 1158.2 433.5 1139.6 446.6 C 1123.1 458.2 1107.7 460.1 1088.1 460.1 L 1051.7 460.1 L 1051.7 319.2 Z M 1079.2 436.4 L 1087.7 436.4 C 1094.6 436.4 1109.8 436.0 1122.1 427.1 C 1133.3 419.1 1139.6 404.8 1139.6 389.7 C 1139.6 375.0 1133.5 360.6 1122.3 352.1 C 1110.9 343.7 1097.0 342.8 1087.7 342.8 L 1079.2 342.8 L 1079.2 436.4 Z M 1079.2 436.4  M 1220.7 319.2 L 1220.7 436.4 L 1264.2 436.4 L 1264.2 460.1 L 1193.2 460.1 L 1193.2 319.2 Z M 1220.7 319.2  M 1301.2 395.7 L 1252.8 319.2 L 1285.3 319.2 L 1315.5 368.2 L 1345.7 319.2 L 1378.2 319.2 L 1328.6 395.7 L 1328.6 460.1 L 1301.1 460.1 L 1301.1 395.7 Z M 1301.2 395.7  M 1517.9 342.9 L 1470.6 342.9 L 1470.6 374.3 L 1514.9 374.3 L 1514.9 398.0 L 1470.6 398.0 L 1470.6 460.1 L 1443.1 460.1 L 1443.1 319.2 L 1517.9 319.2 Z M 1517.9 342.9  M 1569.0 319.2 L 1569.0 460.1 L 1541.5 460.1 L 1541.5 319.2 Z M 1569.0 319.2  M 1645.4 342.9 L 1645.4 460.1 L 1618.0 460.1 L 1618.0 342.9 L 1586.3 342.9 L 1586.3 319.2 L 1677.1 319.2 L 1677.1 342.9 Z M 1645.4 342.9 "/></svg></a></header>
+
+  <h1>Recibí la propuesta de <span class="b">Goodly Fit</span></h1>
+
+  <form id="leadForm" novalidate>
+    <div class="field">
+      <label for="nombre">Nombre y apellido</label>
+      <input id="nombre" name="nombre" type="text" autocomplete="name" required>
+      <div class="err">Completá tu nombre.</div>
+    </div>
+    <div class="field">
+      <label for="gimnasio">Nombre de tu gimnasio / centro</label>
+      <input id="gimnasio" name="gimnasio" type="text" autocomplete="organization" required>
+      <div class="err">Completá el nombre del gimnasio o centro.</div>
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="rol">Tu rol</label>
+        <select id="rol" name="rol" required>
+          <option value="" disabled selected>Elegí</option>
+          <option>Dueño/a</option>
+          <option>Socio/a</option>
+          <option>Gerente</option>
+          <option>Coordinador/a</option>
+          <option>Profesor/a</option>
+          <option>Otro</option>
+        </select>
+        <div class="err">Elegí una opción.</div>
+      </div>
+      <div class="field">
+        <label for="ciudad">Ciudad</label>
+        <input id="ciudad" name="ciudad" type="text" autocomplete="address-level2" required>
+        <div class="err">Completá la ciudad.</div>
+      </div>
+    </div>
+    <div class="field">
+      <label for="whatsapp">WhatsApp</label>
+      <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="11 2345 6789" required>
+      <div class="err">Ingresá un número válido (con código de área).</div>
+    </div>
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="nombre@tugimnasio.com" required>
+      <div class="err">Ingresá un email válido.</div>
+    </div>
+    <div class="field">
+      <label for="socios">Socios activos</label>
+      <select id="socios" name="socios" required>
+        <option value="" disabled selected>Elegí</option>
+        <option>Menos de 150</option>
+        <option>150 a 400</option>
+        <option>400 a 1.000</option>
+        <option>Más de 1.000</option>
+        <option>Todavía no abrí</option>
+      </select>
+      <div class="err">Elegí una opción.</div>
+    </div>
+    <div class="field">
+      <label for="sistema">Sistema de gestión actual <span class="opt">(opcional)</span></label>
+      <input id="sistema" name="sistema" type="text" placeholder="Ej: EVO, planillas, ninguno">
+    </div>
+    <input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0">
+    <button type="submit" class="btn" id="submitBtn"><span id="btnTxt">Quiero la propuesta</span><span class="ar"><svg><use href="#arr"/></svg></span></button>
+    <p class="legal">Al enviar aceptás que Goodly Fit SA use estos datos para enviarte la propuesta y contactarte (Ley 25.326).</p>
+  </form>
+
+  <nav class="links">
+    <a class="lk" href="https://goodlyfit.app" target="_blank" rel="noopener"><svg><use href="#web"/></svg>Nuestra web</a>
+    <a class="lk" href="https://www.instagram.com/goodlyfit" target="_blank" rel="noopener"><svg><use href="#ig"/></svg>Instagram</a>
+  </nav>
+</div>
+
+<script src="/registros/config.js"></script>
+<script>
+const params = new URLSearchParams(location.search);
+const origen = params.get("src") || "qr-stand";
+const modoStand = params.get("modo") === "stand";
+
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2)); }
+
+const form = document.getElementById("leadForm");
+const btn = document.getElementById("submitBtn");
+const btnTxt = document.getElementById("btnTxt");
+
+function setInvalid(el, bad){ el.closest(".field").classList.toggle("invalid", bad); return !bad; }
+
+function validate(){
+  const f = form.elements;
+  let ok = true;
+  ["nombre","gimnasio","ciudad"].forEach(n => { ok = setInvalid(f[n], f[n].value.trim().length < 2) && ok; });
+  ["rol","socios"].forEach(n => { ok = setInvalid(f[n], !f[n].value) && ok; });
+  const tel = f.whatsapp.value.replace(/\D/g,"");
+  ok = setInvalid(f.whatsapp, tel.length < 8 || tel.length > 15) && ok;
+  ok = setInvalid(f.email, !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email.value.trim())) && ok;
+  if(!ok){ const first = form.querySelector(".invalid input, .invalid select"); if(first) first.focus(); }
+  return ok;
+}
+
+form.addEventListener("input", e => { const fl = e.target.closest(".field"); if(fl) fl.classList.remove("invalid"); });
+
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  if(!validate()) return;
+  const f = form.elements;
+  const payload = {
+    id: uid(),
+    nombre: f.nombre.value.trim(),
+    gimnasio: f.gimnasio.value.trim(),
+    rol: f.rol.value,
+    ciudad: f.ciudad.value.trim(),
+    whatsapp: f.whatsapp.value.trim(),
+    email: f.email.value.trim().toLowerCase(),
+    socios: f.socios.value,
+    sistema: f.sistema.value.trim(),
+    interes: "",
+    origen: modoStand ? "stand-tablet" : origen,
+    consentimiento: "Sí (al enviar)",
+    hp: f.hp.value,
+    enviadoDesde: new Date().toISOString()
+  };
+  btn.disabled = true; btnTxt.textContent = "Enviando…";
+  try{
+    await send(payload, 10000);
+  }catch(err){
+    // Sin señal o error: se guarda en el dispositivo y se reintenta solo
+    const q = readQueue(); q.push(payload); writeQueue(q);
+  }
+  const next = new URLSearchParams({ n: payload.nombre.split(" ")[0] });
+  if(modoStand) next.set("modo","stand");
+  location.href = "/registros/gracias?" + next.toString();
+});
+</script>
+</body>
+</html>
