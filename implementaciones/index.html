@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="es-AR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Goodly Fit · Implementaciones</title>
+<meta name="description" content="Gimnasios que ya eligieron Goodly Fit: agenda de implementaciones octubre a diciembre 2026.">
+<meta name="theme-color" content="#213DF3">
+<link rel="icon" type="image/png" href="/assets/logos/logo-goodly-fit-favicon.png?v=20260524">
+<link rel="apple-touch-icon" href="/assets/logos/logo-goodly-fit-favicon.png?v=20260524">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+<style>
+/* Layout: igual que goodlyfit.app, fondo blanco con grilla tenue y halo azul; encabezado centrado, tarjetas de mes estilo "Capta/Vende/Retiene", calendario grande y CTA. Tema claro fijo a propósito (la marca es blanca). */
+:root{
+  --bg:#FFFFFF;
+  --ink:#0C1618;        /* títulos */
+  --ink-2:#2B3336;      /* texto */
+  --muted:#6B7480;      /* texto secundario */
+  --faint:#B9BEC8;
+  --line:#E6E8EE;
+  --soft:#F5F6F8;
+  --blue:#213DF3;
+  --blue-tint:#E8ECFF;
+  --blue-mid:#9DAAFF;
+  --red:#DC2626;
+  --red-tint:#FEE2E2;
+  --we:#ECEEF2;
+  --font:"Poppins",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--bg);color:var(--ink-2)}
+body{font-family:var(--font);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;padding-inline:clamp(16px,4vw,56px);padding-block:20px 56px;overflow-x:hidden}
+button,input,select{font-family:inherit;font-size:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+.bgfx{position:absolute;left:0;right:0;top:0;height:900px;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 38%, rgba(33,61,243,.09), transparent 70%),
+    linear-gradient(var(--soft) 1px, transparent 1px) 0 0/68px 68px,
+    linear-gradient(90deg, var(--soft) 1px, transparent 1px) 0 0/68px 68px;
+  mask-image:linear-gradient(180deg,#000 30%,transparent 95%);-webkit-mask-image:linear-gradient(180deg,#000 30%,transparent 95%)}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:36px;position:relative;z-index:1}
+
+/* nav */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.logo{height:19px;width:auto;color:var(--ink);display:block}
+.navpill{display:flex;align-items:center;gap:4px;border:1px solid var(--line);border-radius:999px;padding:5px;background:rgba(255,255,255,.85);backdrop-filter:blur(8px)}
+.navbtn{border:none;background:transparent;border-radius:999px;padding:9px 16px;font-size:14px;font-weight:500;color:var(--ink);display:inline-flex;align-items:center;gap:8px}
+.navbtn:hover{background:var(--soft)}
+.navbtn[aria-pressed="true"]{background:var(--blue);color:#fff}
+.live{width:7px;height:7px;border-radius:50%;background:#16A34A}
+
+/* hero */
+.hero{text-align:center;display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:28px}
+.badge{display:inline-flex;align-items:center;gap:8px;background:var(--blue-tint);color:var(--blue);font-size:14px;font-weight:500;padding:7px 16px;border-radius:999px}
+.badge::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--blue-mid)}
+h1{margin:0;font-weight:400;font-size:clamp(36px,6.4vw,88px);line-height:1.04;letter-spacing:-.035em;color:var(--ink);text-wrap:balance;max-width:14ch}
+h1 span{color:var(--blue)}
+.lead{margin:0;color:var(--muted);font-size:clamp(15px,1.4vw,19px);max-width:46ch;text-wrap:balance}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:28px;padding:22px 26px;display:flex;flex-direction:column;gap:4px;box-shadow:0 20px 40px -28px rgba(12,22,24,.18)}
+.stat .k{font-size:13px;font-weight:600;color:var(--blue)}
+.stat b{font-size:clamp(34px,4vw,56px);font-weight:500;line-height:1.05;letter-spacing:-.03em;color:var(--ink);font-variant-numeric:tabular-nums}
+.stat small{color:var(--muted);font-size:14px}
+.stat.hl{background:var(--blue);border-color:var(--blue);box-shadow:0 26px 50px -22px rgba(33,61,243,.55)}
+.stat.hl .k{color:rgba(255,255,255,.75)}.stat.hl b{color:#fff}.stat.hl small{color:rgba(255,255,255,.8)}
+
+/* ticker */
+.sec-title{margin:0;text-align:center;font-weight:400;font-size:clamp(24px,3vw,40px);letter-spacing:-.02em;color:var(--ink)}
+.ticker{display:flex;gap:12px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.ticker-in{display:flex;gap:12px;flex:none;animation:marq 40s linear infinite}
+.ticker:hover .ticker-in{animation-play-state:paused}
+@keyframes marq{to{transform:translateX(calc(-100% - 12px))}}
+.tk{flex:none;display:flex;flex-direction:column;justify-content:center;gap:2px;min-width:180px;height:96px;padding:0 24px;border-radius:22px;background:var(--soft)}
+.tk b{font-weight:600;color:var(--ink);font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.tk i{font-style:normal;font-size:13px;color:var(--muted);white-space:nowrap}
+.tk-empty{color:var(--muted);text-align:center;padding:24px;width:100%}
+
+/* meses */
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.mcard{background:#fff;border:1px solid var(--line);border-radius:28px;padding:22px;text-align:left;display:flex;flex-direction:column;gap:14px;transition:transform .2s,box-shadow .2s,background .2s;box-shadow:0 20px 40px -30px rgba(12,22,24,.2)}
+.mcard:hover{transform:translateY(-2px)}
+.mcard[aria-selected="true"]{background:var(--blue);border-color:var(--blue);color:#fff;box-shadow:0 30px 60px -24px rgba(33,61,243,.55)}
+.mtop{display:flex;justify-content:space-between;align-items:flex-start}
+.mkick{font-size:13px;font-weight:600;color:var(--blue)}
+.mcard[aria-selected="true"] .mkick{color:rgba(255,255,255,.75)}
+.mnum{font-size:13px;font-weight:500;color:var(--faint);font-variant-numeric:tabular-nums}
+.mcard[aria-selected="true"] .mnum{color:rgba(255,255,255,.7)}
+.mname{font-size:clamp(22px,2.2vw,30px);font-weight:600;letter-spacing:-.02em;color:var(--ink);text-transform:capitalize;line-height:1.1}
+.mcard[aria-selected="true"] .mname{color:#fff}
+.minigrid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.mini{aspect-ratio:1;border-radius:5px;background:var(--soft)}
+.mini.blank{background:transparent}
+.mini.we{background:var(--we)}
+.mini.l2{background:var(--red)}
+.mini.past{opacity:.4}
+.mcard[aria-selected="true"] .mini{background:rgba(255,255,255,.16)}
+.mcard[aria-selected="true"] .mini.blank{background:transparent}
+.mcard[aria-selected="true"] .mini.we{background:rgba(12,22,24,.28)}
+.mcard[aria-selected="true"] .mini.l2{background:var(--red);box-shadow:0 0 0 1.5px #fff}
+.mfoot{display:flex;flex-direction:column;gap:8px}
+.mpct{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+.mpct b{color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.mcard[aria-selected="true"] .mpct{color:rgba(255,255,255,.8)}
+.mcard[aria-selected="true"] .mpct b{color:#fff}
+.bar{height:6px;border-radius:999px;background:var(--soft);overflow:hidden}
+.bar>div{height:100%;background:var(--red);border-radius:999px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+.mcard[aria-selected="true"] .bar{background:rgba(255,255,255,.2)}
+.mcard[aria-selected="true"] .bar>div{background:#fff}
+
+/* calendario */
+.cal{background:#fff;border:1px solid var(--line);border-radius:28px;padding:clamp(14px,2.2vw,28px);display:flex;flex-direction:column;gap:16px;box-shadow:0 30px 60px -40px rgba(12,22,24,.25)}
+.cal-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.cal-title{font-size:clamp(26px,3vw,40px);font-weight:400;letter-spacing:-.03em;color:var(--ink);text-transform:capitalize;line-height:1.1}
+.cal-sub{font-size:14px;color:var(--muted);margin-top:4px}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.sw{width:12px;height:12px;border-radius:4px;display:inline-block}
+.dow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;font-size:12px;font-weight:600;color:var(--muted);padding-inline:6px}
+.grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.day{min-width:0;min-height:132px;border-radius:18px;background:#fff;border:1px solid var(--line);padding:10px;display:flex;flex-direction:column;gap:6px;text-align:left;transition:border-color .15s,transform .15s}
+button.day:hover{border-color:var(--blue-mid)}
+.day.blank{border-color:transparent;background:transparent}
+.day.we{background:var(--we);border-color:var(--we)}
+.day.we .dnum{color:var(--muted)}
+.day.past{opacity:.45}
+.day.today{box-shadow:inset 0 0 0 2px var(--ink)}
+.day.full{background:var(--red);border-color:var(--red);box-shadow:0 18px 30px -18px rgba(220,38,38,.55)}
+.day.full.past{opacity:.55}
+.day.full .dnum{color:#fff}
+.dnum{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+.full .dnum{color:#fff}
+.tag{font-size:10px;letter-spacing:.06em;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--ink);color:#fff}
+.full .tag{background:#fff;color:var(--red)}
+.chip{border-radius:12px;padding:7px 9px;background:var(--blue);color:#fff;min-width:0;animation:pop .35s ease-out;box-shadow:0 8px 16px -10px rgba(33,61,243,.7)}
+.full .chip{background:#fff;color:var(--ink);box-shadow:none}
+.chip b{display:block;font-weight:600;font-size:13px;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chip .sedes{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;opacity:.85}
+.pipsr{display:flex;gap:2px;flex-wrap:wrap}
+.pipsr i{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.9}
+.slot{border:1px dashed var(--line);border-radius:12px;padding:7px;font-size:12px;color:var(--faint);text-align:center}
+.more{font-size:12px;font-weight:500;color:var(--blue)}
+.full .more{color:#fff}
+.pips{display:none;gap:3px;margin-top:auto}
+.pip{width:7px;height:7px;border-radius:50%;box-shadow:inset 0 0 0 1px var(--faint)}
+.pip.on{background:var(--blue);box-shadow:none}
+.full .pip.on{background:#fff}
+.pip.on{background:var(--red)}
+@keyframes pop{from{transform:scale(.94)}to{transform:none}}
+
+/* cta */
+.cta{display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:clamp(28px,5vw,56px) 20px;border-radius:28px;background:radial-gradient(ellipse 60% 70% at 50% 0%, var(--blue-tint), #fff 70%);border:1px solid var(--line)}
+.cta h2{margin:0;font-weight:400;font-size:clamp(28px,4vw,56px);letter-spacing:-.035em;line-height:1.05;color:var(--ink);text-wrap:balance}
+.cta h2 span{color:var(--blue)}
+.cta p{margin:0;color:var(--muted);max-width:44ch}
+.pillbtn{text-decoration:none;display:inline-flex;align-items:center;gap:16px;background:var(--blue);color:#fff;font-weight:500;font-size:16px;padding:8px 8px 8px 26px;border-radius:999px;box-shadow:0 18px 34px -16px rgba(33,61,243,.65)}
+.pillbtn .arr{width:38px;height:38px;border-radius:50%;background:#fff;color:var(--blue);display:grid;place-items:center}
+.foot{text-align:center;font-size:13px;color:var(--muted)}
+
+.notice{border:1px solid var(--line);border-radius:18px;padding:12px 16px;font-size:14px;color:var(--muted);background:var(--soft);text-align:center}
+
+/* panel */
+.scrim{position:fixed;inset:0;background:rgba(12,22,24,.35);backdrop-filter:blur(3px);z-index:20;display:flex;justify-content:flex-end}
+.sheet{width:min(440px,100%);height:100%;background:#fff;padding:calc(28px + env(safe-area-inset-top,0px)) 24px calc(24px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;gap:18px;overflow-y:auto;box-shadow:-30px 0 60px -30px rgba(12,22,24,.3)}
+.sheet h2{margin:0;font-size:28px;font-weight:400;letter-spacing:-.03em;color:var(--ink);text-transform:capitalize;line-height:1.1}
+.sub{color:var(--muted);font-size:14px;margin-top:6px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;background:var(--soft)}
+.row-main{min-width:0;flex:1}
+.row-main b{display:block;font-weight:600;color:var(--ink);overflow-wrap:anywhere}
+.row-main i{font-style:normal;color:var(--muted);font-size:13px}
+.svc{font-size:11px;font-weight:600;color:var(--blue);background:var(--blue-tint);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.x{border:none;background:transparent;color:var(--muted);font-size:13px;padding:6px 10px;border-radius:999px}
+.x:hover{background:#fff;color:var(--ink)}
+.x.confirm{color:#DC2626;background:#FEE2E2}
+form{display:flex;flex-direction:column;gap:12px;border-top:1px solid var(--line);padding-top:18px}
+.ftitle{font-size:13px;font-weight:600;color:var(--blue)}
+.frow{display:grid;grid-template-columns:minmax(0,1fr) 96px;gap:10px}
+label{display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--muted)}
+input,select{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--ink);width:100%}
+input:focus,select:focus{border-color:var(--blue);outline:none;box-shadow:0 0 0 4px var(--blue-tint)}
+.err{color:#DC2626;font-size:13px;min-height:1em}
+.btn{border:1px solid var(--line);background:#fff;border-radius:999px;padding:11px 20px;font-weight:500;color:var(--ink)}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn.primary:hover{background:#1B33D6}
+.btn:disabled{opacity:.6}
+.sheet-foot{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:auto;padding-top:8px}
+.cupo{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.cupo input{width:70px;padding:8px 10px}
+
+body.stand .edit-only{display:none!important}
+body.standmode .stand-hide{display:none!important}
+.navbtn.editing{background:var(--ink);color:#fff}
+.pinbox{margin:auto;width:min(380px,calc(100% - 32px));height:auto;border-radius:28px;align-self:center}
+#pinScrim{justify-content:center;align-items:center}
+.sync{font-size:12px;color:var(--muted);text-align:center}
+
+@media (max-width:900px){.stats{grid-template-columns:1fr 1fr 1fr;gap:10px}.stat{padding:16px;border-radius:22px}}
+@media (max-width:720px){
+  .navbtn.hide-sm{display:none}
+  .months{gap:8px}
+  .mcard{padding:12px;border-radius:20px;gap:10px}
+  .mkick,.mnum{font-size:11px}
+  .mname{font-size:17px}
+  .minigrid{gap:2px}
+  .mpct{flex-direction:column;font-size:11px}
+  .stat small{font-size:12px}
+  .stat .k{font-size:11px}
+  .grid,.dow{gap:4px}
+  .day{min-height:64px;padding:6px;border-radius:12px}
+  .chip,.slot,.more,.tag{display:none}
+  .pips{display:flex}
+  .dnum{font-size:12px}
+  .legend{display:none}
+  .dow{font-size:10px;padding-inline:2px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="bgfx" aria-hidden="true"></div>
+<div class="wrap">
+  <header class="top">
+    <svg class="logo" viewBox="238.7 271.6 1438.5 250.9" role="img" aria-label="Goodly Fit"><path fill="currentColor" d="M 465.7 407.2 L 465.7 407.2 C 465.6 406 465.6 404.7 465.5 403.5 C 464.6 395.1 462.5 386.6 459.2 378.4 C 453.0 363.1 443.2 350.4 431.2 340.8 C 414.9 327.9 394.5 320.7 373.6 320.8 C 365.0 320.8 356.3 322.1 347.8 324.6 C 318.4 334.1 297.2 360.0 297.2 390.5 C 297.2 405.8 302.6 419.9 311.6 431.4 C 313.8 434.2 316.2 436.8 318.8 439.2 C 323.1 443.3 327.9 446.9 333.2 449.9 C 338.1 452.7 343.4 455.0 349.0 456.7 C 350.7 457.2 352.5 457.7 354.3 458.1 L 354.3 466.1 L 398.3 441.4 L 354.3 416.6 L 354.3 424.5 C 351.5 423.4 338.8 417.9 333.0 403.6 C 326.3 386.8 334.7 372.0 335.7 370.3 C 336.4 369.1 338.5 365.9 341.5 363.2 C 341.5 363.2 343.6 361.3 346.1 359.6 C 346.6 359.3 347.1 359.0 347.1 359.0 C 347.5 358.7 348.0 358.5 348.5 358.2 C 348.6 358.1 348.8 358.1 348.9 358.0 L 348.9 358.0 C 351.0 356.8 353.2 355.7 355.5 354.8 C 362.1 352.1 368.9 350.9 375.6 350.9 C 380.8 351.0 385.9 351.8 390.8 353.2 C 407.0 358.1 421.1 370.3 428.1 387.7 C 430.7 394.2 432.1 400.8 432.4 407.4 C 432.5 407.9 432.5 408.4 432.6 409.0 C 433.0 413.8 435.3 452.4 387.3 468.8 C 358.0 478.8 334.1 470.7 317.5 460.2 C 303.6 451.0 295.2 440.4 293.6 438.3 L 293.2 437.6 C 283.5 423.9 277.8 407.2 277.8 389.1 C 277.8 357.0 295.8 329.1 322.2 314.8 C 324.0 313.9 325.9 313.1 327.8 312.3 C 329.5 311.7 331.2 311.1 332.9 310.5 C 333.8 310.2 334.7 310.0 335.6 309.7 C 335.6 309.7 335.6 309.7 335.6 309.7 C 340.3 308.1 345.2 307.0 350.3 306.2 C 351.6 306.0 353.0 305.8 354.4 305.6 C 354.5 305.6 354.6 305.6 354.7 305.6 L 354.7 303.5 L 354.7 303.5 L 354.7 271.6 L 354.6 271.6 L 354.6 271.6 C 341.1 272.3 328.2 275.3 316.3 280.2 C 316.2 280.2 316.1 280.2 316.0 280.3 C 315.1 280.6 314.4 281 313.6 281.3 C 313.5 281.3 313.5 281.3 313.5 281.3 C 289.6 292.0 269.8 310.3 257.4 333.1 C 257.3 333.2 257.3 333.3 257.3 333.3 C 256.7 334.5 256.1 335.6 255.5 336.7 C 255.4 336.9 255.3 337.1 255.3 337.3 C 254.7 338.3 254.2 339.3 253.8 340.4 C 253.6 340.7 253.5 341.0 253.4 341.3 C 253 342.2 252.5 343.1 252.2 344.1 C 252.0 344.5 251.8 345.0 251.6 345.4 C 251.3 346.2 251.0 347.0 250.7 347.8 C 250.4 348.4 250.2 349.1 250.0 349.7 C 249.8 350.3 249.5 350.9 249.3 351.5 C 249.0 352.4 248.7 353.4 248.4 354.3 C 248.3 354.6 248.2 354.9 248.1 355.2 C 238.6 386.4 241.9 421.3 260.2 451.3 C 273.6 473.2 293.0 489.2 315.0 498.5 C 315.2 498.6 315.5 498.7 315.7 498.8 C 315.8 498.8 316.0 498.9 316.1 498.9 L 323.0 501.2 C 323.8 501.4 324.5 501.6 325.3 501.9 C 387.8 522.5 434.4 482 434.4 482 C 467.8 455.6 465.8 409.3 465.7 407.2 Z M 465.7 407.2  M 623.9 384.7 L 688.5 384.7 L 688.5 386.4 C 688.5 395.9 687.2 425.5 667.8 444.7 C 653.2 459.3 635.3 463.3 617.7 463.3 C 600.2 463.3 582.0 459.7 566.6 444.3 C 561.8 439.4 545.7 421.6 545.7 390.0 C 545.7 362.7 558.0 346.0 566.4 337.6 C 577.0 326.8 594.7 316.0 622.0 316.0 C 632.5 316.0 643.7 317.7 654.5 323.4 C 663.6 328.1 673.5 336.5 680.9 349.2 L 657.0 362.1 C 652.1 352.6 645.0 347.7 640.5 345.4 C 634.6 342.4 627.2 340.9 620.7 340.9 C 609.5 340.9 596.8 345.0 588.2 353.4 C 580.1 361.2 574.0 374.7 574.0 390.6 C 574.0 409.4 582.0 420.6 588.0 426.3 C 594.3 432.4 604.2 438.3 619.2 438.3 C 628.5 438.3 639.1 435.8 646.9 429.9 C 652.4 425.6 657.9 418.5 660.2 408.3 L 623.9 408.3 Z M 623.9 384.7  M 857.4 389.8 C 857.4 432.6 826.6 463.3 782.3 463.3 C 737.9 463.3 707.1 432.7 707.1 389.8 C 707.1 346.9 737.9 316.0 782.3 316.0 C 826.6 316.0 857.4 346.9 857.4 389.8 Z M 829.1 389.8 C 829.1 361.3 809.7 341.0 782.2 341.0 C 754.8 341.0 735.4 361.2 735.4 389.8 C 735.4 418.3 754.8 438.4 782.2 438.4 C 809.7 438.4 829.1 418.3 829.1 389.8 Z M 829.1 389.8  M 1026.4 389.8 C 1026.4 432.6 995.6 463.3 951.2 463.3 C 906.9 463.3 876.0 432.7 876.0 389.8 C 876.0 346.9 906.9 316.0 951.2 316.0 C 995.6 316.0 1026.4 346.9 1026.4 389.8 Z M 998.1 389.8 C 998.1 361.3 978.7 341.0 951.2 341.0 C 923.8 341.0 904.3 361.2 904.3 389.8 C 904.3 418.3 923.8 438.4 951.2 438.4 C 978.7 438.3 998.1 418.3 998.1 389.8 Z M 998.1 389.8  M 1088.5 319.2 C 1108.1 319.2 1125.2 321.3 1140.9 332.9 C 1158.0 345.8 1167.9 366.3 1167.9 389.7 C 1167.9 413.2 1158.2 433.5 1139.6 446.6 C 1123.1 458.2 1107.7 460.1 1088.1 460.1 L 1051.7 460.1 L 1051.7 319.2 Z M 1079.2 436.4 L 1087.7 436.4 C 1094.6 436.4 1109.8 436.0 1122.1 427.1 C 1133.3 419.1 1139.6 404.8 1139.6 389.7 C 1139.6 375.0 1133.5 360.6 1122.3 352.1 C 1110.9 343.7 1097.0 342.8 1087.7 342.8 L 1079.2 342.8 L 1079.2 436.4 Z M 1079.2 436.4  M 1220.7 319.2 L 1220.7 436.4 L 1264.2 436.4 L 1264.2 460.1 L 1193.2 460.1 L 1193.2 319.2 Z M 1220.7 319.2  M 1301.2 395.7 L 1252.8 319.2 L 1285.3 319.2 L 1315.5 368.2 L 1345.7 319.2 L 1378.2 319.2 L 1328.6 395.7 L 1328.6 460.1 L 1301.1 460.1 L 1301.1 395.7 Z M 1301.2 395.7  M 1517.9 342.9 L 1470.6 342.9 L 1470.6 374.3 L 1514.9 374.3 L 1514.9 398.0 L 1470.6 398.0 L 1470.6 460.1 L 1443.1 460.1 L 1443.1 319.2 L 1517.9 319.2 Z M 1517.9 342.9  M 1569.0 319.2 L 1569.0 460.1 L 1541.5 460.1 L 1541.5 319.2 Z M 1569.0 319.2  M 1645.4 342.9 L 1645.4 460.1 L 1618.0 460.1 L 1618.0 342.9 L 1586.3 342.9 L 1586.3 319.2 L 1677.1 319.2 L 1677.1 342.9 Z M 1645.4 342.9"></path></svg>
+    <div class="navpill">
+      <button class="navbtn" id="btnStand" aria-pressed="false" type="button"><span class="live"></span>Modo stand</button>
+      <button class="navbtn hide-sm" id="btnFull" type="button">Pantalla completa</button>
+      <button class="navbtn stand-hide" id="btnEdit" type="button" hidden>Editar</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <span class="badge">Agenda de implementaciones · Oct — Dic 2026</span>
+    <h1>Gimnasios que ya eligieron <span>Goodly Fit.</span></h1>
+    <p class="lead">Cada fecha es un gimnasio que pasa a captar, vender y retener con un solo software.</p>
+  </section>
+
+  <section class="stats" aria-live="polite">
+    <div class="stat hl"><span class="k">Gimnasios</span><b id="sTotal">0</b><small>implementando</small></div>
+    <div class="stat"><span class="k">Sedes</span><b id="sSedes">0</b><small>conectadas</small></div>
+    <div class="stat"><span class="k">Disponibles</span><b id="sFree">0</b><small>fechas libres</small></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:20px">
+    <h2 class="sec-title">Se suman a Goodly Fit</h2>
+    <div class="ticker" id="ticker"><div class="tk-empty">Todavía no hay implementaciones cargadas.</div></div>
+  </section>
+
+  <div id="notice" class="notice" hidden></div>
+
+  <nav class="months" id="months" role="tablist" aria-label="Meses"></nav>
+
+  <section class="cal">
+    <div class="cal-head">
+      <div><div class="cal-title" id="calTitle"></div><div class="cal-sub" id="calSub"></div></div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--red)"></i>Fecha ocupada</span>
+        <span><i class="sw" style="border:1px dashed var(--faint)"></i>Disponible</span>
+        <span><i class="sw" style="background:var(--we)"></i>Fin de semana</span>
+      </div>
+    </div>
+    <div class="dow"><span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="cta">
+    <span class="badge" id="ctaBadge">Una implementación por día</span>
+    <h2>Reservá tu fecha de <span>implementación.</span></h2>
+    <p>Te dejamos el gimnasio funcionando: publicidad, agente de IA de ventas, app con tu marca y sistema de gestión. Todo conectado.</p>
+    <a class="pillbtn" href="https://calendly.com/nahuel-turano-goodlyfit/1-1-nahuel-turano" target="_blank" rel="noopener">Agendá tu diagnóstico<span class="arr" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span></a>
+  </section>
+  <div class="foot">goodlyfit.app</div>
+  <div class="sync" id="sync"></div>
+</div>
+
+<div class="scrim" id="scrim" hidden>
+  <aside class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div>
+      <h2 id="sheetTitle"></h2>
+      <div class="sub" id="sheetSub"></div>
+    </div>
+    <div class="list" id="sheetList"></div>
+    <form id="addForm" class="edit-only" hidden>
+      <div class="ftitle">Agendar implementación</div>
+      <div class="frow">
+        <label for="fGym">Gimnasio<input id="fGym" maxlength="60" placeholder="Ej: OnFit" autocomplete="off"></label>
+        <label for="fSedes">Sedes<input id="fSedes" type="number" min="1" max="99" value="1"></label>
+      </div>
+      <label for="fSvc">Servicio (opcional)
+        <select id="fSvc">
+          <option value="">Sin especificar</option>
+          <option>Software</option>
+          <option>Agencia + IA</option>
+          <option>Software + Agencia</option>
+        </select>
+      </label>
+      <div class="err" id="fErr"></div>
+      <button class="btn primary" type="submit" id="fSubmit">Agendar</button>
+    </form>
+    <div class="sheet-foot">
+      <span></span>
+      <button class="btn" type="button" id="btnClose">Cerrar</button>
+    </div>
+  </aside>
+</div>
+
+<div class="scrim" id="pinScrim" hidden>
+  <form class="sheet pinbox" id="pinForm" role="dialog" aria-modal="true" aria-labelledby="pinTitle">
+    <div><h2 id="pinTitle">Editar agenda</h2><div class="sub">Ingresá el PIN de edición.</div></div>
+    <label for="fPin">PIN<input id="fPin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="32"></label>
+    <div class="err" id="pinErr"></div>
+    <div class="sheet-foot" style="margin-top:0"><button class="btn" type="button" id="pinCancel">Cancelar</button><button class="btn primary" type="submit" id="pinOk">Entrar</button></div>
+  </form>
+</div>
+<script src="/implementaciones/data.js"></script>
+<script src="/implementaciones/config.js"></script>
+<script>
+(function(){
+  const MONTHS=[{y:2026,m:9},{y:2026,m:10},{y:2026,m:11}];
+  const MN=["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const DN=["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+  const $=id=>document.getElementById(id);
+  const pad=n=>String(n).padStart(2,"0");
+  const key=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+  const now=new Date();
+  const todayKey=key(now.getFullYear(),now.getMonth(),now.getDate());
+  const S={items:[],cupo:1,sel:0,stand:false,canWrite:false,db:null,openDay:null,confirmId:null};
+  MONTHS.forEach((mo,i)=>{if(mo.y===now.getFullYear()&&mo.m===now.getMonth())S.sel=i});
+
+  const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+  const sedesTxt=n=>`${n} sede${n>1?"s":""}`;
+  const sedesOf=it=>Math.max(1,parseInt(it.sedes,10)||1);
+  function byDay(){const map={};for(const it of S.items)(map[it.fecha]=map[it.fecha]||[]).push(it);
+    for(const k in map)map[k].sort((a,b)=>(a.creado||0)-(b.creado||0));return map}
+  const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
+  const isWE=(y,m,d)=>{const w=new Date(y,m,d).getDay();return w===0||w===6};
+
+  function monthStats(mo,map){
+    let cap=0,used=0,free=0,gyms=0;
+    for(let d=1;d<=daysIn(mo.y,mo.m);d++){
+      const k=key(mo.y,mo.m,d),n=(map[k]||[]).length;gyms+=n;
+      if(isWE(mo.y,mo.m,d)&&!n)continue;
+      cap+=S.cupo;used+=Math.min(n,S.cupo);
+      if(k>=todayKey&&!isWE(mo.y,mo.m,d))free+=Math.max(0,S.cupo-n);
+    }
+    return {cap,used,free,gyms,pct:cap?Math.round(used/cap*100):0};
+  }
+
+  function chip(it){
+    const c=el("div","chip");c.append(el("b",null,it.gimnasio));
+    const s=el("div","sedes");const p=el("span","pipsr");const n=sedesOf(it);
+    for(let i=0;i<Math.min(n,12);i++)p.append(el("i"));
+    s.append(p,el("span",null,sedesTxt(n)));c.append(s);return c;
+  }
+
+  function render(){
+    const map=byDay();
+    const inRange=S.items.filter(i=>i.fecha>="2026-10-01"&&i.fecha<="2026-12-31");
+    $("sTotal").textContent=inRange.length;
+    $("sSedes").textContent=inRange.reduce((a,i)=>a+sedesOf(i),0);
+    const ms=MONTHS.map(mo=>monthStats(mo,map));
+    $("sFree").textContent=ms.reduce((a,s)=>a+s.free,0);
+
+    // ticker (duplicado para loop continuo)
+    const tk=$("ticker");tk.replaceChildren();
+    const sorted=[...inRange].sort((a,b)=>a.fecha<b.fecha?-1:1);
+    if(!sorted.length)tk.append(el("div","tk-empty","Todavía no hay implementaciones cargadas."));
+    else{
+      const reps=Math.max(2,Math.ceil(12/sorted.length));
+      for(let r=0;r<2;r++){const inn=el("div","ticker-in");if(r)inn.setAttribute("aria-hidden","true");
+        for(let q=0;q<Math.ceil(reps/2);q++)for(const it of sorted){const c=el("div","tk");c.append(el("b",null,it.gimnasio));
+          const [y,m,d]=it.fecha.split("-").map(Number);c.append(el("i",null,`${sedesTxt(sedesOf(it))} · ${d} de ${MN[m-1]}`));inn.append(c)}
+        tk.append(inn)}
+    }
+
+    // tarjetas de mes
+    const mc=$("months");mc.replaceChildren();
+    MONTHS.forEach((mo,i)=>{
+      const b=el("button","mcard");b.type="button";b.setAttribute("role","tab");b.setAttribute("aria-selected",String(i===S.sel));
+      b.onclick=()=>{S.sel=i;render()};
+      const t=el("div","mtop");const l=el("div");
+      l.append(el("div","mkick",ms[i].gyms?`${ms[i].gyms} gimnasio${ms[i].gyms>1?"s":""}`:"Fechas abiertas"),el("div","mname",MN[mo.m]));
+      t.append(l,el("span","mnum",pad(mo.m+1)));
+      const g=el("div","minigrid");const lead=(new Date(mo.y,mo.m,1).getDay()+6)%7;
+      for(let j=0;j<lead;j++)g.append(el("i","mini blank"));
+      for(let d=1;d<=daysIn(mo.y,mo.m);d++){const k=key(mo.y,mo.m,d),n=(map[k]||[]).length;
+        let c="mini";if(isWE(mo.y,mo.m,d)&&!n)c+=" we";if(n)c+=" l2";if(k<todayKey)c+=" past";g.append(el("i",c))}
+      const f=el("div","mfoot");const p=el("div","mpct");p.append(el("span",null,"Agenda reservada"),el("b",null,ms[i].pct+"%"));
+      const bar=el("div","bar");const fill=el("div");fill.style.width=ms[i].pct+"%";bar.append(fill);f.append(p,bar);
+      b.append(t,g,f);mc.append(b);
+    });
+
+    // calendario grande
+    const mo=MONTHS[S.sel],st=ms[S.sel];
+    $("calTitle").textContent=`${MN[mo.m]} ${mo.y}`;
+    $("calSub").textContent=`${st.gyms} implementación${st.gyms===1?"":"es"} agendada${st.gyms===1?"":"s"} · ${st.free} fecha${st.free===1?"":"s"} libre${st.free===1?"":"s"}`;
+    const grid=$("grid");grid.replaceChildren();
+    const lead=(new Date(mo.y,mo.m,1).getDay()+6)%7;
+    for(let j=0;j<lead;j++)grid.append(el("div","day blank"));
+    for(let d=1;d<=daysIn(mo.y,mo.m);d++){
+      const k=key(mo.y,mo.m,d),list=map[k]||[],n=list.length,we=isWE(mo.y,mo.m,d),past=k<todayKey;
+      const cell=el("button","day");cell.type="button";
+      if(we&&!n)cell.classList.add("we");if(past)cell.classList.add("past");if(k===todayKey)cell.classList.add("today");
+      if(n)cell.classList.add("full");
+      cell.setAttribute("aria-label",`${d} de ${MN[mo.m]}: ${n?list.map(x=>x.gimnasio).join(", "):"sin implementaciones"}`);
+      cell.onclick=()=>openDay(k);
+      const top=el("div","dnum");top.append(el("span",null,String(d)));
+      if(n)top.append(el("span","tag","Ocupado"));else if(k===todayKey)top.append(el("span","tag","Hoy"));
+      cell.append(top);
+      list.slice(0,3).forEach(it=>cell.append(chip(it)));
+      if(n>3)cell.append(el("span","more",`+${n-3} más`));
+      if(!we&&!past)for(let j=n;j<S.cupo&&j<3;j++)cell.append(el("div","slot","Disponible"));
+      const pips=el("div","pips");if(!(we&&!n))for(let j=0;j<Math.min(Math.max(S.cupo,n),4);j++)pips.append(el("i","pip"+(j<n?" on":"")));
+      cell.append(pips);grid.append(cell);
+    }
+
+    const nf=ms.findIndex(s=>s.free>0);
+    $("ctaBadge").textContent=nf>=0?`Quedan ${ms[nf].free} fechas en ${MN[MONTHS[nf].m]}`:"Agenda completa hasta diciembre";
+
+    if(S.openDay)renderSheet();
+    document.body.classList.toggle("stand",S.stand||!S.canWrite);
+  }
+
+  function fmtDay(k){const [y,m,d]=k.split("-").map(Number);return `${DN[new Date(y,m-1,d).getDay()]} ${d} de ${MN[m-1]}`}
+  function openDay(k){S.openDay=k;S.confirmId=null;$("scrim").hidden=false;$("fErr").textContent="";renderSheet();
+    if(S.canWrite&&!S.stand)setTimeout(()=>$("fGym").focus(),30);else $("btnClose").focus()}
+  function closeDay(){S.openDay=null;$("scrim").hidden=true}
+
+  function renderSheet(){
+    const k=S.openDay,list=byDay()[k]||[],editable=S.canWrite&&!S.stand,free=Math.max(0,S.cupo-list.length);
+    $("sheetTitle").textContent=fmtDay(k);
+    const [yy,mm,dd]=k.split("-").map(Number);const weD=isWE(yy,mm-1,dd);
+    $("sheetSub").textContent=list.length?"Fecha ocupada":(weD?"Fin de semana":"Fecha disponible");
+    const L=$("sheetList");L.replaceChildren();
+    if(!list.length)L.append(el("div","notice",editable?"Fecha libre. Agendá un gimnasio abajo.":"Esta fecha está disponible. Consultanos."));
+    for(const it of list){
+      const r=el("div","row");const m=el("div","row-main");m.append(el("b",null,it.gimnasio),el("i",null,sedesTxt(sedesOf(it))));r.append(m);
+      if(it.servicio)r.append(el("span","svc",it.servicio));
+      if(editable){const on=S.confirmId===it.id;const x=el("button","x"+(on?" confirm":""),on?"¿Quitar?":"Quitar");x.type="button";
+        x.onclick=async()=>{if(!on){S.confirmId=it.id;renderSheet();return}S.confirmId=null;
+          try{await api({action:"delete",id:it.id})}catch(e){$("fErr").textContent=errMsg(e)}};r.append(x)}
+      L.append(r);
+    }
+    $("addForm").hidden=!editable||list.length>0;
+  }
+
+  $("btnClose").onclick=closeDay;
+  $("scrim").addEventListener("click",e=>{if(e.target.id==="scrim")closeDay()});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("scrim").hidden)closeDay()});
+
+  $("addForm").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const g=$("fGym").value.trim(),sd=Math.max(1,parseInt($("fSedes").value,10)||1),s=$("fSvc").value;
+    if(!g){$("fErr").textContent="Escribí el nombre del gimnasio.";$("fGym").focus();return}
+    $("fSubmit").disabled=true;$("fErr").textContent="";
+    try{await api({action:"add",fecha:S.openDay,gimnasio:g,sedes:sd,servicio:s});$("fGym").value="";$("fSedes").value=1}
+    catch(err){$("fErr").textContent=errMsg(err)}
+    finally{$("fSubmit").disabled=false}
+  });
+
+  let rot=null;
+  $("btnStand").onclick=()=>{S.stand=!S.stand;$("btnStand").setAttribute("aria-pressed",String(S.stand));document.body.classList.toggle("standmode",S.stand);
+    clearInterval(rot);if(S.stand)rot=setInterval(()=>{if(!S.openDay){S.sel=(S.sel+1)%MONTHS.length;render()}},12000);render()};
+  $("btnFull").onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch(_){$("btnFull").hidden=true}};
+
+  render();
+
+  // ---------- Datos ----------
+  // Fuente principal: la Google Sheet vía Apps Script (config.js). Respaldo: data.js.
+  const API=(window.IMPLEMENTACIONES_API||"").trim();
+  const PINKEY="gf-impl-pin";
+  const norm=arr=>(arr||[]).map((x,i)=>({id:x.id||("i"+i),creado:i,...x,sedes:Math.max(1,parseInt(x.sedes,10)||1)})).filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x.fecha||"")&&x.gimnasio);
+  S.items=norm(window.IMPLEMENTACIONES);S.canWrite=false;render();
+
+  function setItems(list){S.items=norm(list);render();
+    $("sync").textContent="Actualizado "+new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"})}
+  function errMsg(e){const c=e&&e.message;
+    return c==="pin"?"El PIN no es correcto.":c==="ocupado"?"Esa fecha ya está ocupada.":c==="datos"?"Faltan datos del gimnasio.":"No se pudo guardar. Revisá la conexión y probá de nuevo."}
+  async function load(){
+    if(!API)return;
+    try{const c=new AbortController();const t=setTimeout(()=>c.abort(),15000);
+      const r=await fetch(API+(API.includes("?")?"&":"?")+"t="+Date.now(),{signal:c.signal});clearTimeout(t);
+      const j=await r.json();if(j.ok)setItems(j.items)}catch(_){/* queda la última versión mostrada */}
+  }
+  async function api(body){
+    const pin=getPin();if(!pin)throw new Error("pin");
+    const c=new AbortController();const t=setTimeout(()=>c.abort(),20000);
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({...body,pin}),signal:c.signal});
+    clearTimeout(t);const j=await r.json();
+    if(!j.ok){if(j.error==="pin"){setPin("");setEdit(false)}throw new Error(j.error||"error")}
+    setItems(j.items);return j;
+  }
+  function getPin(){try{return sessionStorage.getItem(PINKEY)||localStorage.getItem(PINKEY)||""}catch(_){return S._pin||""}}
+  function setPin(v){S._pin=v;try{if(v){localStorage.setItem(PINKEY,v)}else{localStorage.removeItem(PINKEY);sessionStorage.removeItem(PINKEY)}}catch(_){}}
+  function setEdit(on){S.canWrite=on;const b=$("btnEdit");b.textContent=on?"Listo":"Editar";b.classList.toggle("editing",on);render()}
+
+  if(API){
+    $("btnEdit").hidden=false;
+    $("btnEdit").onclick=()=>{if(S.canWrite){setEdit(false);return}
+      if(getPin()){setEdit(true);return}
+      $("pinErr").textContent="";$("fPin").value="";$("pinScrim").hidden=false;setTimeout(()=>$("fPin").focus(),30)};
+    $("pinCancel").onclick=()=>{$("pinScrim").hidden=true};
+    $("pinForm").addEventListener("submit",async e=>{e.preventDefault();
+      const v=$("fPin").value.trim();if(!v){$("pinErr").textContent="Escribí el PIN.";return}
+      $("pinOk").disabled=true;$("pinErr").textContent="";
+      try{setPin(v);await api({action:"check"});$("pinScrim").hidden=true;setEdit(true)}
+      catch(err){setPin("");$("pinErr").textContent=errMsg(err)}finally{$("pinOk").disabled=false}});
+    load();setInterval(load,60000);
+    document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
+  }
+  function showNotice(t){const n=$("notice");n.textContent=t;n.hidden=false}
+})();
+</script>
+
+</body>
+</html>
