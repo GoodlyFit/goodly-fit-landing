@@ -39,6 +39,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "ruleta/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "assets/**/*",
       "use": "@vercel/static"
     },
