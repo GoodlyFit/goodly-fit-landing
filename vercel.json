@@ -35,15 +35,15 @@
       "use": "@vercel/static"
     },
     {
-      "src": "registros/**/*",
-      "use": "@vercel/static"
-    },
-    {
       "src": "assets/**/*",
       "use": "@vercel/static"
     },
     {
       "src": "public/**/*",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "videos/**/*",
       "use": "@vercel/static"
     }
   ]
