@@ -113,10 +113,10 @@
   .vbox .ov{position:absolute;inset:0;display:grid;place-items:center;transition:opacity .4s}
   .vbox .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,13,16,.35) 0%,rgba(7,13,16,0) 30%,rgba(7,13,16,0) 60%,rgba(7,13,16,.55) 100%)}
   .vbox.playing .ov{opacity:0;pointer-events:none}
-  .play2{position:relative;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);
-    backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transition:transform .45s var(--ease),background .35s}
+  .play2{position:relative;width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:var(--blue);
+    box-shadow:0 14px 34px -10px rgba(33,61,243,.75),0 0 0 6px rgba(255,255,255,.55);transition:transform .45s var(--ease),background .35s}
   .play2 svg{width:26px;height:26px;fill:#fff;margin-left:4px;transition:fill .35s}
-  .play2::before{content:"";position:absolute;inset:-9px;border-radius:50%;border:1.5px solid transparent;border-top-color:rgba(255,255,255,.75);border-right-color:rgba(255,255,255,.2);animation:spin 2.6s linear infinite}
+  .play2::before{content:"";position:absolute;inset:-12px;border-radius:50%;border:2px solid transparent;border-top-color:var(--blue);border-right-color:rgba(33,61,243,.3);animation:spin 2.6s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
   .vbox:hover .play2{transform:scale(1.08);background:#fff}
   .vbox:hover .play2 svg{fill:var(--blue)}
