@@ -43,6 +43,10 @@
       "use": "@vercel/static"
     },
     {
+      "src": "implementaciones/**/*",
+      "use": "@vercel/static"
+    },
+    {
       "src": "firmas/**/*",
       "use": "@vercel/static"
     },
