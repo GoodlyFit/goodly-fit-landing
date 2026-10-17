@@ -6,11 +6,16 @@ import { db } from "./db";
 export const BASE = "/centrocontrol";
 const COOKIE = "gc_session";
 const DIAS = 30;
-const secret = () => {
-  const s = process.env.AUTH_SECRET;
-  if (!s || s.length < 32) throw new Error("Falta AUTH_SECRET (mínimo 32 caracteres)");
-  return s;
-};
+// Clave para firmar sesiones: AUTH_SECRET si está definida; si no, una clave aleatoria guardada en la base.
+let _secret = process.env.AUTH_SECRET && process.env.AUTH_SECRET.length >= 32 ? process.env.AUTH_SECRET : null;
+async function secret() {
+  if (_secret) return _secret;
+  const row = await db.config.findUnique({ where: { clave: "auth_secret" } });
+  if (row) return (_secret = row.valor);
+  const valor = crypto.randomBytes(48).toString("base64url");
+  await db.config.upsert({ where: { clave: "auth_secret" }, create: { clave: "auth_secret", valor }, update: {} });
+  return (_secret = (await db.config.findUnique({ where: { clave: "auth_secret" } })).valor);
+}
 
 export function hashPassword(pw) {
   const salt = crypto.randomBytes(16).toString("hex");
@@ -22,12 +27,12 @@ export function checkPassword(pw, stored) {
   const a = Buffer.from(hash, "hex"), b = crypto.scryptSync(pw, salt, 64);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
-const sign = (data) => crypto.createHmac("sha256", secret()).update(data).digest("base64url");
+const sign = async (data) => crypto.createHmac("sha256", await secret()).update(data).digest("base64url");
 
-export function sessionCookie(userId) {
+export async function sessionCookie(userId) {
   const payload = Buffer.from(JSON.stringify({ u: userId, exp: Date.now() + DIAS * 864e5 })).toString("base64url");
   return {
-    name: COOKIE, value: payload + "." + sign(payload),
+    name: COOKIE, value: payload + "." + (await sign(payload)),
     options: { httpOnly: true, sameSite: "lax", secure: process.env.NODE_ENV === "production", path: BASE, maxAge: DIAS * 86400 },
   };
 }
@@ -38,7 +43,7 @@ export async function currentUser() {
   if (!raw) return null;
   const [payload, sig] = raw.split(".");
   if (!payload || !sig) return null;
-  const good = sign(payload);
+  const good = await sign(payload);
   if (sig.length !== good.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(good))) return null;
   const { u, exp } = JSON.parse(Buffer.from(payload, "base64url").toString());
   if (Date.now() > exp) return null;

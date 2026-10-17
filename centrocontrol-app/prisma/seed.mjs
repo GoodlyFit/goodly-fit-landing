@@ -89,10 +89,10 @@ const hoy = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Buenos_Aires" 
 
 const hashPassword = (pw) => { const salt = crypto.randomBytes(16).toString("hex"); return salt + ":" + crypto.scryptSync(pw, salt, 64).toString("hex"); };
 
-// Usuario administrador desde variables de entorno (ADMIN_USER, ADMIN_PASSWORD, ADMIN_NAME). Se actualiza en cada deploy.
+// Usuario administrador: ADMIN_PASSWORD (obligatoria), ADMIN_USER (por defecto "nahuel"), ADMIN_NAME. Se actualiza en cada deploy.
 async function admin() {
-  const usuario = (process.env.ADMIN_USER || "").trim().toLowerCase(), pw = process.env.ADMIN_PASSWORD || "";
-  if (!usuario || !pw) return console.log("Sin ADMIN_USER/ADMIN_PASSWORD: no se crea usuario administrador.");
+  const usuario = (process.env.ADMIN_USER || "nahuel").trim().toLowerCase(), pw = process.env.ADMIN_PASSWORD || "";
+  if (!pw) return console.log("Sin ADMIN_PASSWORD: no se crea ni cambia el usuario administrador.");
   const nombre = process.env.ADMIN_NAME || "Nahuel";
   await db.user.upsert({ where: { usuario }, create: { usuario, nombre, passHash: hashPassword(pw), rol: "equipo" }, update: { nombre, passHash: hashPassword(pw) } });
   console.log(`Usuario ${usuario} listo.`);

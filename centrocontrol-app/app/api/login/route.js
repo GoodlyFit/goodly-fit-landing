@@ -16,7 +16,7 @@ export async function POST(req) {
   const user = usuario && (await db.user.findUnique({ where: { usuario } }));
   if (!user || !checkPassword(password, user.passHash)) { reg.n++; intentos.set(ip, reg); return back("?e=1"); }
   intentos.delete(ip);
-  const c = sessionCookie(user.id);
+  const c = await sessionCookie(user.id);
   const headers = new Headers({ Location: BASE });
   headers.append("Set-Cookie", `${c.name}=${c.value}; Path=${c.options.path}; Max-Age=${c.options.maxAge}; HttpOnly; SameSite=Lax${c.options.secure ? "; Secure" : ""}`);
   return new Response(null, { status: 303, headers });

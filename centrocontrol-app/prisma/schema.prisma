@@ -205,3 +205,8 @@ model User {
   rol      String  @default("equipo") // equipo | cliente
   clientId String? // solo para rol cliente
 }
+
+model Config {
+  clave String @id
+  valor String
+}

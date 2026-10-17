@@ -8,7 +8,7 @@ Stack: Next.js 15 + Prisma. Base de datos Postgres.
 
 La app vive en **goodlyfit.app/centrocontrol** y pide usuario y contraseña.
 
-- El usuario administrador se crea en cada deploy con las variables `ADMIN_USER`, `ADMIN_PASSWORD` y `ADMIN_NAME`.
+- El usuario administrador (`nahuel`) se crea en cada deploy con la variable `ADMIN_PASSWORD`. Opcionales: `ADMIN_USER`, `ADMIN_NAME`, `AUTH_SECRET` (si no está, se genera y se guarda en la base).
 - Más usuarios del equipo: `npm run usuario -- tomi "Tomi" contraseña-larga`
 - Usuario para un cliente (solo ve su portal de ventas): `npm run usuario -- doup "DOUP!" contraseña-larga cliente doup`
 
@@ -17,7 +17,7 @@ La app vive en **goodlyfit.app/centrocontrol** y pide usuario y contraseña.
 1. El código vive en la carpeta `centrocontrol-app` del repo `GoodlyFit/goodly-fit-landing`.
 2. En Vercel: **Add New → Project**, importar `goodly-fit-landing` con el nombre `goodly-control` y **Root Directory** `centrocontrol-app`.
 3. En el proyecto: **Storage → Create Database → Neon (Postgres)** y conectarla. Eso crea `DATABASE_URL` solo.
-4. En **Settings → Environment Variables** cargar `AUTH_SECRET`, `ADMIN_USER`, `ADMIN_PASSWORD` y `ADMIN_NAME` (los valores están en `variables-vercel.txt`, que no se sube a GitHub).
+4. En **Settings → Environment Variables** cargar `ADMIN_PASSWORD` con la contraseña del usuario administrador.
 5. **Deploy.** El build crea las tablas, carga los clientes si la base está vacía y crea el usuario administrador.
 6. En la landing (`goodly-fit-landing`), el `vercel.json` reenvía `/centrocontrol` a `goodly-control.vercel.app`. Si el proyecto quedó con otro nombre, cambiar esa URL.
 
