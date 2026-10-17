@@ -1,0 +1,207 @@
+// Base de datos del centro de control (Postgres). La conexión va en la variable DATABASE_URL.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Client {
+  id          String   @id
+  orden       Int      @default(0)
+  nombre      String
+  rubro       String   @default("")
+  zona        String   @default("")
+  estado      String   @default("Sin cargar") // Sin cargar | Onboarding | Activo | Pausado
+  actualizado String?  // YYYY-MM-DD de la última novedad
+  revision    Int      @default(2) // día de revisión semanal (1 = lunes)
+  cuotaVideo  Int      @default(3)
+  cuotaImagen Int      @default(3)
+  drive       String   @default("")
+  metaId      String   @default("")
+  moneda      String   @default("ARS")
+  embudo      Boolean  @default(false) // true si registra agendas/asistencias además de ventas
+  // ficha
+  hace        String   @default("")
+  noHace      String   @default("")
+  publico     String   @default("")
+  oferta      String   @default("")
+  tono        String   @default("")
+  reglasProd  String   @default("")
+  // plan de 90 días
+  planTitulo  String   @default("")
+  planInicio  String   @default("")
+  planFin     String   @default("")
+
+  servicios   Service[]
+  kpis        Kpi[]
+  fases       Phase[]
+  reglas      Rule[]
+  revisiones  Review[]
+  angulos     Angle[]
+  onboarding  OnboardingStep[]
+  piezas      Piece[]
+  pedidos     Request[]
+  notas       Note[]
+  ventas      Sale[]
+  metricas    MonthMetric[]
+}
+
+model Service {
+  id       Int    @id @default(autoincrement())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  nombre   String
+  precio   Int    @default(0)
+  orden    Int    @default(0)
+}
+
+model Kpi {
+  id       Int     @id @default(autoincrement())
+  clientId String
+  client   Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  nombre   String
+  base     String  @default("")
+  objetivo String  @default("")
+  actual   String  @default("")
+  enObjetivo Boolean?
+  orden    Int     @default(0)
+}
+
+model Phase {
+  id       Int    @id @default(autoincrement())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  nombre   String
+  desde    String
+  hasta    String
+  items    String @default("") // un ítem por renglón
+  orden    Int    @default(0)
+}
+
+model Rule {
+  id        Int    @id @default(autoincrement())
+  clientId  String
+  client    Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  situacion String
+  criterio  String
+  accion    String
+  orden     Int    @default(0)
+}
+
+model Review {
+  id         Int    @id @default(autoincrement())
+  clientId   String
+  client     Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fecha      String
+  autor      String
+  decisiones String // JSON: [{s, t}]
+}
+
+model Angle {
+  id          Int     @id @default(autoincrement())
+  clientId    String
+  client      Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  nombre      String
+  estado      String  @default("idea") // revisar | ganador | testeo | idea | fatigado | descartado
+  hipotesis   String  @default("")
+  aprendizaje String  @default("")
+  piezas      Piece[]
+}
+
+model OnboardingStep {
+  id          Int     @id @default(autoincrement())
+  clientId    String
+  client      Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  nombre      String
+  ok          Boolean @default(false)
+  responsable String  @default("")
+  desde       String?
+  orden       Int     @default(0)
+}
+
+model Piece {
+  id         Int          @id @default(autoincrement())
+  clientId   String
+  client     Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  mes        String       // YYYY-MM
+  tipo       String       // video | imagen
+  titulo     String
+  angleId    Int?
+  angle      Angle?       @relation(fields: [angleId], references: [id], onDelete: SetNull)
+  etapa      String
+  desde      String       // fecha en que entró a la etapa actual
+  linkGuion  String       @default("")
+  linkCrudos String       @default("")
+  linkFinal  String       @default("")
+  ganchos    Int          @default(3)
+  eventos    PieceEvent[]
+}
+
+model PieceEvent {
+  id      Int    @id @default(autoincrement())
+  pieceId Int
+  piece   Piece  @relation(fields: [pieceId], references: [id], onDelete: Cascade)
+  etapa   String // etapa que se cerró
+  fecha   String
+  autor   String
+}
+
+model Request {
+  id          Int     @id @default(autoincrement())
+  clientId    String
+  client      Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fecha       String
+  texto       String
+  fuera       Boolean @default(false)
+  ok          Boolean @default(false)
+  responsable String  @default("Tomi")
+}
+
+model Note {
+  id       Int    @id @default(autoincrement())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fecha    String
+  autor    String
+  texto    String
+}
+
+model Sale {
+  id       Int    @id @default(autoincrement())
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  fecha    String
+  nombre   String
+  estado   String @default("Compró") // Compró | Seña | En seguimiento | No compró | No asistió
+  plan     String @default("")
+  monto    Int    @default(0)
+  anuncio  String @default("No sabe")
+  objecion String @default("")
+}
+
+model MonthMetric {
+  id             Int     @id @default(autoincrement())
+  clientId       String
+  client         Client  @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  mes            String  // YYYY-MM
+  inversion      Float   @default(0) // en pesos
+  conversaciones Int     @default(0)
+  // Totales históricos importados (se usan solo si ese mes no tiene registros de venta cargados)
+  agendas        Int?
+  asistencias    Int?
+  ventas         Int?
+  facturacion    Float?
+  @@unique([clientId, mes])
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  usuario  String  @unique
+  nombre   String
+  passHash String
+  rol      String  @default("equipo") // equipo | cliente
+  clientId String? // solo para rol cliente
+}
