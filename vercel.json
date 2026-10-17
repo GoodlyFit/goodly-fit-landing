@@ -62,5 +62,15 @@
       "src": "videos/**/*",
       "use": "@vercel/static"
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/centrocontrol",
+      "destination": "https://goodly-control.vercel.app/centrocontrol"
+    },
+    {
+      "source": "/centrocontrol/:path*",
+      "destination": "https://goodly-control.vercel.app/centrocontrol/:path*"
+    }
   ]
 }
