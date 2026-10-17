@@ -6,3 +6,5 @@ img{max-width:100%}
 .login-card h1{font-size:28px}
 .login-card .btn{justify-content:space-between}
 .login-err{margin:0;color:var(--bad);background:var(--bad-soft);border-radius:10px;padding:8px 12px;font-size:13px}
+.login-ok{margin:0;color:var(--ok);background:var(--ok-soft);border-radius:10px;padding:8px 12px;font-size:13px}
+.login-card a.meta{text-decoration:none;text-align:center}

@@ -8,7 +8,7 @@ Stack: Next.js 15 + Prisma. Base de datos Postgres.
 
 La app vive en **goodlyfit.app/centrocontrol** y pide usuario y contraseña.
 
-- El usuario administrador (`nahuel`) se crea en el primer deploy con la contraseña inicial. Para cambiarla: variable `ADMIN_PASSWORD` en Vercel o `npm run usuario`.
+- El usuario administrador (`nahuel`) se crea en el primer deploy. Cada usuario cambia su contraseña desde **Cambiar contraseña** (abajo a la izquierda).
 - Más usuarios del equipo: `npm run usuario -- tomi "Tomi" contraseña-larga`
 - Usuario para un cliente (solo ve su portal de ventas): `npm run usuario -- doup "DOUP!" contraseña-larga cliente doup`
 
@@ -45,7 +45,7 @@ npm run dev                  # http://localhost:3000/centrocontrol
 ## Cómo está armado
 
 - `prisma/schema.prisma`: las tablas (clientes, piezas, pedidos, ventas, ángulos, revisiones, métricas mensuales, etc.).
-- `prisma/seed.mjs`: la carga inicial de clientes. DOUP! viene con la radiografía completa: ficha, plan de 90 días, reglas, ángulos y totales de abril a octubre.
+- `prisma/seed.mjs`: la carga inicial. Los datos de los clientes están en `prisma/clientes.privado.mjs`, que no se sube al repositorio.
 - `app/api/state`: devuelve todo el estado.
 - `app/api/action`: recibe cada acción de la interfaz (mover una pieza, cargar una venta, guardar la puesta al día…) y la guarda.
 - `public/app.js` y `public/app.css`: la interfaz.

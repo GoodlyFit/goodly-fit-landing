@@ -171,7 +171,7 @@ function vCargar(c){
 
 /* ---------- nav ---------- */
 function renderNav(){
-  const foot=document.querySelector(".side-foot");if(foot&&!foot.dataset.ok){foot.dataset.ok=1;foot.insertAdjacentHTML("beforeend",`<div class="meta" style="margin-top:6px">Sesión: ${esc(USER.nombre)}</div><form method="post" action="${BASE}/api/logout"><button class="btn sm ghost" type="submit" style="padding-left:0">Cerrar sesión</button></form>`);if(USER.rol==="cliente"){foot.querySelector("label").hidden=true;$("#who").hidden=true}}
+  const foot=document.querySelector(".side-foot");if(foot&&!foot.dataset.ok){foot.dataset.ok=1;foot.insertAdjacentHTML("beforeend",`<div class="meta" style="margin-top:6px">Sesión: ${esc(USER.nombre)}</div><a class="meta" href="${BASE}/cuenta" style="color:var(--accent);text-decoration:none">Cambiar contraseña</a><form method="post" action="${BASE}/api/logout"><button class="btn sm ghost" type="submit" style="padding-left:0">Cerrar sesión</button></form>`);if(USER.rol==="cliente"){foot.querySelector("label").hidden=true;$("#who").hidden=true}}
   const portal=S.quien.startsWith("cliente:");
   const tn=portal?0:tareas(S.quien).length;
   const prod=S.clientes.reduce((a,c)=>a+c.piezas.filter(p=>p.etapa!=="aire").length,0);

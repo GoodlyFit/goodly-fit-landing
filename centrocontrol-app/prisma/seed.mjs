@@ -1,11 +1,10 @@
-// Carga inicial: los 12 clientes + DOUP!. No incluye estado operativo (piezas, pedidos, notas):
+// Carga inicial de clientes. No incluye estado operativo (piezas, pedidos, notas):
 // eso se carga desde "Puesta al día". Correr con: npm run db:setup
 import { PrismaClient } from "@prisma/client";
 import { readFileSync, existsSync } from "node:fs";
 import crypto from "node:crypto";
 
 const db = new PrismaClient();
-const TC = 1550; // dólar oficial usado en la radiografía de DOUP!
 
 const ONB = ["Reunión de inicio", "Accesos: cuenta publicitaria, Instagram, WhatsApp y Drive", "Ficha del cliente completa", "Estrategia de 90 días entregada", "Estrategia validada por el cliente"];
 const ONB_RESP = ["", "Cliente", "", "", "Cliente"];
@@ -16,74 +15,10 @@ const REGLAS_BASE = [
   ["Calidad", "Cruce semanal con las ventas cargadas por el cliente", "Priorizar el ángulo con más ventas, no el de menor costo"],
 ];
 
-const clientes = [
-  { id: "doup", nombre: "DOUP!", rubro: "Acrobacia, parkour y calistenia", zona: "Villa Crespo, CABA", revision: 5, embudo: true,
-    hace: "Acrobacia de suelo y aérea, cama elástica, parkour, calistenia, parada de manos y danzas urbanas en una sede de gran escala. El precio está por encima de un gimnasio tradicional y la experiencia también.",
-    noHace: "No es un gimnasio de máquinas. El precio no se comunica antes de la clase de prueba.",
-    publico: "Adulto principiante de 25 a 38 años. Ex gimnasta que retoma una pasión de la infancia, con ingresos propios. Deportista que complementa otra actividad. Familias con hijos para las clases Kids. Temporadas fuertes: marzo-abril y julio-septiembre; diciembre y enero son los meses de menor demanda.",
-    oferta: "El interesado escribe por WhatsApp, recibe preguntas de calificación y se lo invita a una clase de prueba. Al salir se presentan dos opciones, la segunda como recomendada. Seguimiento manual en uno o dos contactos. Cuatro vendedores en dos turnos; un bot toma la conversación si no hay respuesta humana en dos minutos.",
-    tono: "Cercano y desafiante: no hace falta saber para venir.",
-    reglasProd: "Videos verticales de 30 a 45 segundos, subtitulados, con tres ganchos.",
-    planTitulo: "Misma facturación con la mitad de la inversión", planInicio: "2026-10-19", planFin: "2027-01-16",
-    servicios: [["Pack 40 clases", 700000], ["Pack 10 clases", 200000], ["Suscripción mensual", 90000]],
-    kpis: [["Inversión mensual (USD)", "2.043", "800 – 1.000", "", null], ["Facturación de alumnos nuevos", "$24,7M", "Nivel de septiembre", "", null], ["Costo por conversación (USD)", "1,40", "1,00 – 1,30", "", null], ["Pauta sobre facturación", "12,8%", "5% – 6,5%", "", null]],
-    fases: [
-      ["Testeo en frío", "2026-10-19", "2026-11-15", ["Lanzamiento de los tres videos nuevos", "Testeo de los dos videos grabados por DOUP!", "Retiro progresivo de los anuncios actuales", "Primera lectura de rendimiento por ángulo"]],
-      ["Escala", "2026-11-16", "2026-12-15", ["Escala de los ganadores en frío", "Producción de los ángulos ganadores con creativos nuevos", "Activación de públicos personalizados", "Ángulo Kids orientado a padres"]],
-      ["Consolidación", "2026-12-16", "2027-01-16", ["Inversión en el piso de USD 800 por temporada baja", "Mayor peso de públicos personalizados", "Producción del banco creativo para marzo", "Revisión de 90 días y plan del próximo trimestre"]],
-    ],
-    reglas: [
-      ["Corte de gancho", "Retención a 3 s < 25% o CTR < 1,2% con 7 días de circulación", "Se reemplaza el gancho, se conserva el cuerpo del video"],
-      ["Corte de anuncio", "Costo por conversación > USD 1,80 tras 14 días", "Se pausa y se registra el aprendizaje del ángulo"],
-      ["Escala", "Costo por conversación ≤ USD 1,00 y agenda ≥ 25% de las conversaciones", "Pasa a escala con +20% cada 4 días, techo USD 1.000"],
-      ["Fatiga", "Frecuencia semanal > 1,5 o CTR cae 30% frente a su primera semana", "Rotación a una nueva versión del mismo ángulo"],
-      ["Calidad", "Cruce semanal con el tracker: agendas, asistencias, ventas y plan vendido", "Se prioriza el ángulo con más ventas cada 100 conversaciones, no el de menor costo"],
-    ],
-    angulos: [
-      ["Aprende un truco", "fatigado", "Habilidad aspiracional con reducción del miedo: «Vení sin miedo».", "63% de la inversión total. Costo por conversación de USD 0,67 a 1,83 y CTR de 3,0% a 1,2%. Atrae al indeciso, que compra el plan de entrada."],
-      ["Sin experiencia, con referente", "ganador", "Contención del miedo desde la voz del profesor: nadie llega sabiendo.", "Jose v2: USD 1,18 por conversación, estable. Mejora sobre v1 (USD 1,39)."],
-      ["Comunidad", "ganador", "Cuando entrenás solo es más fácil abandonar.", "Gente copada v2: mejor costo de lanzamiento (USD 0,73). Único que habla de constancia y pertenencia, el argumento del Pack 40. Pausado el 15/09."],
-      ["Sin barreras", "ganador", "No necesitás experiencia, solo animarte.", "No necesitas v1: costo plano cerca de USD 1,00 durante cinco meses."],
-      ["El ex gimnasta", "testeo", "Adultos que hicieron gimnasia o acrobacia de chicos vuelven a hacerlo. Segmento de alta intención.", ""],
-      ["El lugar", "testeo", "La escala del espacio (fosa, camas elásticas, pedana, aéreos) justifica el precio antes de que aparezca la pregunta.", ""],
-      ["Prueba de progreso", "idea", "Mostrar un alumno real que logró la habilidad.", ""],
-      ["Kids para padres", "idea", "Acro Kids convierte 49,3% de las agendas y Parkour Kids 46,9%, las tasas más altas del gimnasio. No tienen creativo propio.", ""],
-      ["Formularios de contacto", "descartado", "Captar por formulario en lugar de conversación.", "USD 96 invertidos y un solo contacto: el público responde a la conversación directa."],
-      ["Tráfico al perfil", "descartado", "Llevar visitas al perfil de Instagram.", "USD 419 en 13.107 visitas sin conversaciones atribuibles."],
-      ["Optimización a compra por DM", "descartado", "Optimizar la campaña al evento de compra.", "USD 210 con diez eventos de compra: no alcanza volumen para que el algoritmo optimice."],
-    ],
-    piezas: [["video", "Volvé a hacer lo que hacías de chico", "El ex gimnasta"], ["video", "Esto no es un gimnasio", "El lugar"], ["video", "Aprendé algo nuevo", "Sin experiencia, con referente"]],
-    metricas: [
-      ["2026-04", 990, 1009, 330, 138, 117, 33.7e6], ["2026-05", 1351, 999, 272, 138, 70, 24.5e6], ["2026-06", 1765, 1266, 323, 195, 111, 30.5e6],
-      ["2026-07", 1893, 1710, 255, 171, 72, 20.6e6], ["2026-08", 2331, 1784, 347, 231, 95, 25.6e6], ["2026-09", 2043, 1462, 270, 193, 93, 24.7e6], ["2026-10", 907, 573, 126, 81, 24, 6.3e6],
-    ].map(([mes, usd, conv, ag, as, v, f]) => ({ mes, inversion: usd * TC, conversaciones: conv, agendas: ag, asistencias: as, ventas: v, facturacion: f })),
-  },
-  { id: "housefit", nombre: "House Fit", rubro: "Gimnasio", metaId: "550680997436634", revision: 1 },
-  { id: "camilo", nombre: "Camilo Yanes", rubro: "Personal trainer · 2 gimnasios", zona: "Buenos Aires", metaId: "153306217", moneda: "USD", revision: 1,
-    hace: "Entrenamiento personal en dos gimnasios propios y planes online.", oferta: "Embudo doble: WhatsApp con agente de IA para presencial y landing para planes digitales." },
-  { id: "sifitness", nombre: "Si Fitness Gym", rubro: "Gimnasio", revision: 2 },
-  { id: "cristina", nombre: "Cristina Barcala", revision: 2 },
-  { id: "tiempo", nombre: "Tiempo Libre", rubro: "Gimnasio", metaId: "1027088952965308", revision: 3 },
-  { id: "corpore", nombre: "Corpore", rubro: "Gimnasio", metaId: "1517467059358334", revision: 3 },
-  { id: "moovon", nombre: "Moov On", rubro: "Biohacking circuit", revision: 4 },
-  { id: "housenunez", nombre: "House Fit Núñez", rubro: "Gimnasio", zona: "Núñez, CABA", revision: 4 },
-  { id: "termo", nombre: "Termo Fit", rubro: "Plantillas para dolor de pisada · itinerante", zona: "Río Cuarto, Rosario, San Luis", metaId: "807169328718785", revision: 5,
-    hace: "Un profesional viaja por ciudades de Argentina, atiende pocos días, evalúa gratis y vende la plantilla en el momento. No vende plantillas: resuelve un dolor normalizado.",
-    noHace: "No tiene local fijo; no vuelve a la ciudad hasta la próxima gira. No inventar urgencia: solo días y cupos reales de cada visita.",
-    publico: "Río Cuarto: mujer 55-76, dolor por estar parada. Rosario: adultos 55+ y jóvenes 20-25 activos. San Luis: adultos 40-55, dolor por trabajar o caminar mucho.",
-    oferta: "Evaluación gratuita + plantilla. B2B: alianza con kinesiólogos y gimnasios que ceden horas vacías y ganan por paciente atendido.",
-    tono: "Cercano, exclusividad territorial: no está siempre en tu ciudad.",
-    servicios: [["Evaluación + plantilla", 90000]],
-    angulos: [["Dolor articular general", "ganador", "Resolver un dolor que la gente ya normalizó.", "Siempre tuvo mejor costo por resultado que el deportivo o el infanto-juvenil."], ["Deportivo e infanto-juvenil", "descartado", "", "Solo como testeo acotado, nunca como eje."]] },
-  { id: "mark", nombre: "Mark Training Club", rubro: "Gimnasio · fútbol y wellness", metaId: "3182376732152374", revision: 5,
-    hace: "Dos líneas: entrenamiento para fútbol y área wellness. Atiende con agente de IA por WhatsApp.",
-    oferta: "Campañas a WhatsApp separadas por línea. En el CRM los leads se etiquetan Training Fútbol, Wellness Deporte o Wellness General." },
-  { id: "axel", nombre: "Axel", revision: 1 },
-  { id: "mateo", nombre: "Mateo", rubro: "Programa 1-1 high ticket · mujeres", zona: "Online", metaId: "2005792346890827", revision: 2, embudo: true,
-    hace: "Programa de acompañamiento 1 a 1. Venta por llamada después de la conversación por DM.", publico: "Mujeres profesionales y emprendedoras.",
-    oferta: "DM → agenda de llamada → asistencia → cierre. Se califica por profesión antes de agendar.",
-    metricas: [["2026-01", 669054, 1118], ["2026-02", 703883, 1222], ["2026-03", 704626, 922], ["2026-04", 745029, 856], ["2026-05", 745610, 778], ["2026-06", 504525, 601], ["2026-07", 380000, 476], ["2026-08", 714000, 752], ["2026-09", 559576, 573], ["2026-10", 405029, 682]].map(([mes, inversion, conversaciones]) => ({ mes, inversion, conversaciones })) },
-];
+// Los datos de los clientes viven en prisma/clientes.privado.mjs (fuera del repositorio).
+// La base de producción ya está cargada; este archivo solo hace falta para recargar desde cero.
+const privado = new URL("./clientes.privado.mjs", import.meta.url);
+const clientes = existsSync(privado) ? (await import(privado.href)).clientes : [];
 
 const hoy = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Buenos_Aires" }).format(new Date());
 
