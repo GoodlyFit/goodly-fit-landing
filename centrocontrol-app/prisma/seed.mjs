@@ -89,11 +89,16 @@ const hoy = new Intl.DateTimeFormat("sv-SE", { timeZone: "America/Buenos_Aires" 
 
 const hashPassword = (pw) => { const salt = crypto.randomBytes(16).toString("hex"); return salt + ":" + crypto.scryptSync(pw, salt, 64).toString("hex"); };
 
-// Usuario administrador: ADMIN_PASSWORD (obligatoria), ADMIN_USER (por defecto "nahuel"), ADMIN_NAME. Se actualiza en cada deploy.
+// Usuario administrador "nahuel". Con ADMIN_PASSWORD se fuerza esa contraseña en cada deploy; sin ella se usa la inicial.
 async function admin() {
   const usuario = (process.env.ADMIN_USER || "nahuel").trim().toLowerCase(), pw = process.env.ADMIN_PASSWORD || "";
-  if (!pw) return console.log("Sin ADMIN_PASSWORD: no se crea ni cambia el usuario administrador.");
   const nombre = process.env.ADMIN_NAME || "Nahuel";
+  // Sin ADMIN_PASSWORD: se crea solo la primera vez con la contraseña inicial (guardada como hash, nunca en texto).
+  if (!pw) {
+    if (await db.user.findUnique({ where: { usuario } })) return console.log(`Usuario ${usuario} ya existe.`);
+    await db.user.create({ data: { usuario, nombre, rol: "equipo", passHash: "a7dd53808577e0263c6c26cbbe7f5fe4:1f4d403c6359f7cc631885d88f5c32137435c59f22cfe5d88fd13aa8fdef3ee22229958aece2e924f507581e44205724ba99146c989c4aa47860c8f8f43d8e4f" } });
+    return console.log(`Usuario ${usuario} creado con la contraseña inicial.`);
+  }
   await db.user.upsert({ where: { usuario }, create: { usuario, nombre, passHash: hashPassword(pw), rol: "equipo" }, update: { nombre, passHash: hashPassword(pw) } });
   console.log(`Usuario ${usuario} listo.`);
 }
