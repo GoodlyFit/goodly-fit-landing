@@ -1,0 +1,7 @@
+node_modules
+.next
+prisma/dev.db
+.env*
+variables-vercel.txt
+prisma/mateo-leads.json
+prisma/clientes.privado.mjs
