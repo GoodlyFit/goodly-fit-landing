@@ -204,6 +204,7 @@ model User {
   passHash String
   rol      String  @default("equipo") // equipo | cliente
   clientId String? // solo para rol cliente
+  admin    Boolean @default(false) // puede crear y administrar usuarios
 }
 
 model Config {

@@ -11,7 +11,7 @@ export default async function Page() {
     <>
       <script dangerouslySetInnerHTML={{ __html: `window.GC_USER=${JSON.stringify(user)};window.GC_BASE=${JSON.stringify(BASE)};` }} />
       <div style={{ display: "contents" }} dangerouslySetInnerHTML={{ __html: SHELL }} />
-      <Script src={`${BASE}/app.js?v=2`} strategy="afterInteractive" />
+      <Script src={`${BASE}/app.js?v=3`} strategy="afterInteractive" />
     </>
   );
 }

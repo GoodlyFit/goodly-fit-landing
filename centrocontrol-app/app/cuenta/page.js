@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { currentUser, BASE } from "@/lib/auth";
+import Usuarios from "./usuarios";
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Mi cuenta · Goodly Control" };
 
@@ -9,7 +10,7 @@ export default async function Cuenta({ searchParams }) {
   if (!user) redirect("/login");
   const q = await searchParams;
   return (
-    <main className="login">
+    <main className="login cuenta">
       <form className="login-card" method="post" action={`${BASE}/api/password`}>
         <div className="brand" style={{ padding: 0 }}><span className="wm">GOODLY FIT</span><span className="tag">{user.nombre}</span></div>
         <h1>Cambiar contraseña</h1>
@@ -21,6 +22,7 @@ export default async function Cuenta({ searchParams }) {
         <button className="btn primary" type="submit">Guardar</button>
         <a className="meta" href={BASE}>← Volver al centro de control</a>
       </form>
+      {user.admin && user.rol === "equipo" && <Usuarios />}
     </main>
   );
 }

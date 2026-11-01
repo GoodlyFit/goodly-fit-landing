@@ -47,5 +47,12 @@ export async function currentUser() {
   if (sig.length !== good.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(good))) return null;
   const { u, exp } = JSON.parse(Buffer.from(payload, "base64url").toString());
   if (Date.now() > exp) return null;
-  return db.user.findUnique({ where: { id: u }, select: { id: true, usuario: true, nombre: true, rol: true, clientId: true } });
+  return db.user.findUnique({ where: { id: u }, select: { id: true, usuario: true, nombre: true, rol: true, clientId: true, admin: true } });
+}
+
+// Contraseña inicial para usuarios nuevos: legible y sin caracteres ambiguos.
+export function generarPassword() {
+  const abc = "abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const s = Array.from(crypto.randomBytes(15), (x) => abc[x % abc.length]).join("");
+  return `${s.slice(0, 5)}-${s.slice(5, 10)}-${s.slice(10)}`;
 }

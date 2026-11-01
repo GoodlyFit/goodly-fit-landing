@@ -2,12 +2,12 @@
 const HOY=new Intl.DateTimeFormat("sv-SE",{timeZone:"America/Buenos_Aires"}).format(new Date()), MES=HOY.slice(0,7);
 const MESES=(()=>{const n=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];const o={};let [y,mm]=MES.split("-").map(Number);const ks=[];for(let i=0;i<12;i++){ks.unshift(`${y}-${String(mm).padStart(2,"0")}`);mm--;if(!mm){mm=12;y--}}ks.forEach(k=>o[k]=n[+k.slice(5)-1]);return o})();
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const EQUIPO=["Nahuel","Tomi"];
+const EQUIPO=["Nahuel","Tomi","Manzo"];
 const ETAPAS={
   video:[
-    {k:"angulo",n:"Definir ángulo",r:"Nahuel",sla:2},{k:"guion",n:"Guion",r:"Tomi",sla:2},{k:"okguion",n:"Revisión de guion",r:"Nahuel",sla:1},
-    {k:"grabacion",n:"Grabación",r:"Cliente",sla:5},{k:"crudos",n:"Revisión de crudos",r:"Tomi",sla:1},
-    {k:"edicion",n:"Edición",r:"Editor",sla:3},{k:"revision",n:"Control final",r:"Tomi",sla:1},
+    {k:"angulo",n:"Definir ángulo",r:"Nahuel",sla:2},{k:"guion",n:"Guion",r:"Manzo",sla:2},{k:"okguion",n:"Revisión de guion",r:"Nahuel",sla:1},
+    {k:"grabacion",n:"Grabación",r:"Cliente",sla:5},{k:"crudos",n:"Revisión de crudos",r:"Manzo",sla:1},
+    {k:"edicion",n:"Edición",r:"Manzo",sla:3},{k:"revision",n:"Control final",r:"Nahuel",sla:1},
     {k:"aprobacion",n:"Aprobación del cliente",r:"Cliente",sla:2},{k:"subida",n:"Subir a campañas",r:"Tomi",sla:1},{k:"aire",n:"Al aire",r:"",sla:99}],
   imagen:[
     {k:"brief",n:"Brief",r:"Tomi",sla:1},{k:"diseno",n:"Diseño con IA",r:"Tomi",sla:2},
@@ -93,7 +93,7 @@ function tareas(persona){
     {const fr=frescura(c);if(fr.d>VIEJO&&persona==="Tomi")t.push({tipo:"puesta",c,txt:"Actualizar el estado",sub:`Sin novedades: ${fr.txt.toLowerCase()}`,d:fr.d,sla:VIEJO});}
     c.piezas.filter(p=>p.etapa!=="aire").forEach(p=>{const e=etapa(p);const d=days(p.desde);
       if(e.r===persona)t.push({tipo:"hacer",c,p,txt:DO_TEXT[p.etapa],sub:`${p.titulo}`,d,sla:e.sla});
-      else if((e.r==="Cliente"||e.r==="Editor")&&persona==="Tomi")t.push({tipo:"seguir",c,p,txt:DO_TEXT[p.etapa],sub:`${p.titulo} · lo tiene ${e.r==="Cliente"?"el cliente":"el editor"}`,d,sla:e.sla});});
+      else if((e.r==="Cliente"||e.r==="Editor")&&persona==="Manzo")t.push({tipo:"seguir",c,p,txt:DO_TEXT[p.etapa],sub:`${p.titulo} · lo tiene ${e.r==="Cliente"?"el cliente":"el editor"}`,d,sla:e.sla});});
     if(c.estado==="Activo"&&new Date(HOY+"T12:00:00").getDay()===c.revision){const hecha=c.revisiones.some(r=>r.f===HOY);if(!hecha&&(persona==="Nahuel"||persona==="Tomi"))t.push({tipo:"revision",c,txt:"Revisión semanal de la cuenta",sub:`${c.reglas.length} reglas de decisión`,d:0,sla:1});}
     c.pedidos.filter(p=>!p.ok&&p.r===persona).forEach(p=>t.push({tipo:"pedido",c,ped:p,txt:p.t,sub:p.fuera?"Fuera del servicio":"Pedido del cliente",d:days(p.f),sla:3}));
     if(c.estado==="Activo"&&persona==="Tomi"){const a=alta(c);if(a.pct<100)t.push({tipo:"alta",c,txt:"Completar el alta",sub:"Falta: "+a.items.filter(x=>!x.ok).map(x=>x.n.toLowerCase()).join(", "),d:0,sla:9,pct:a.pct});const ult=c.ventas.map(v=>v.fecha).sort().pop();const dd=ult?days(ult):99;if(ult&&dd>7)t.push({tipo:"seguir",c,txt:"Pedirle al cliente que cargue las ventas",sub:`Última carga hace ${dd} días`,d:dd,sla:7});}
@@ -171,7 +171,7 @@ function vCargar(c){
 
 /* ---------- nav ---------- */
 function renderNav(){
-  const foot=document.querySelector(".side-foot");if(foot&&!foot.dataset.ok){foot.dataset.ok=1;foot.insertAdjacentHTML("beforeend",`<div class="meta" style="margin-top:6px">Sesión: ${esc(USER.nombre)}</div><a class="meta" href="${BASE}/cuenta" style="color:var(--accent);text-decoration:none">Cambiar contraseña</a><form method="post" action="${BASE}/api/logout"><button class="btn sm ghost" type="submit" style="padding-left:0">Cerrar sesión</button></form>`);if(USER.rol==="cliente"){foot.querySelector("label").hidden=true;$("#who").hidden=true}}
+  const foot=document.querySelector(".side-foot");if(foot&&!foot.dataset.ok){foot.dataset.ok=1;foot.insertAdjacentHTML("beforeend",`<div class="meta" style="margin-top:6px">Sesión: ${esc(USER.nombre)}</div><a class="meta" href="${BASE}/cuenta" style="color:var(--accent);text-decoration:none">${USER.admin?"Mi cuenta y usuarios":"Cambiar contraseña"}</a><form method="post" action="${BASE}/api/logout"><button class="btn sm ghost" type="submit" style="padding-left:0">Cerrar sesión</button></form>`);if(USER.rol==="cliente"){foot.querySelector("label").hidden=true;$("#who").hidden=true}}
   const portal=S.quien.startsWith("cliente:");
   const tn=portal?0:tareas(S.quien).length;
   const prod=S.clientes.reduce((a,c)=>a+c.piezas.filter(p=>p.etapa!=="aire").length,0);
@@ -182,7 +182,7 @@ function renderNav(){
     <button data-go="puesta" class="${R.view==="puesta"||R.view==="cargar"?"on":""}">Puesta al día <span class="count">${pendientesPuesta().length}</span></button>
     <div class="side-sep" style="margin-top:14px">Clientes</div>
     ${S.clientes.map(c=>{const h=salud(c);return `<button data-open="${c.id}" class="${R.view==="cliente"&&R.id===c.id?"on":""}"><span>${esc(c.nombre)}</span><span class="health ${h.nivel}"><i></i></span></button>`}).join("")}`;
-  $("#who").innerHTML=EQUIPO.map(p=>`<option value="${p}" ${S.quien===p?"selected":""}>${p}${p==="Tomi"?" · operaciones":" · estrategia"}</option>`).join("")+
+  $("#who").innerHTML=EQUIPO.map(p=>`<option value="${p}" ${S.quien===p?"selected":""}>${p}${p==="Tomi"?" · anuncios":p==="Manzo"?" · contenido":" · estrategia"}</option>`).join("")+
     `<optgroup label="Portal del cliente">${S.clientes.filter(c=>c.estado==="Activo").map(c=>`<option value="cliente:${c.id}" ${S.quien==="cliente:"+c.id?"selected":""}>${esc(c.nombre)}</option>`).join("")}</optgroup>`;
 }
 function render(){
